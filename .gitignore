@@ -1,0 +1,15 @@
+# IDE
+.idea/
+.vscode/
+
+# Library
+node_modules/
+vendor/
+assets/build/
+
+# Dummy
+composer.lock
+option.json
+package-lock.json
+*.DS_Store
+.DS_Store
