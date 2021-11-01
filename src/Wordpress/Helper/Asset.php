@@ -14,18 +14,6 @@ namespace Fab\Wordpress\Helper;
 trait Asset {
 
     /**
-     * @access   protected
-     * @var      bool    $core    Determine wether the assets is core wordpress or plugin assets
-     */
-    protected $core;
-
-    /**
-     * Asset constructor
-     * @return void
-     */
-    public function __construct(){ $this->core = false; }
-
-    /**
      * WordpressEnqueue Media - for custom wp_editor
      * @return  void
      */
@@ -58,6 +46,11 @@ trait Asset {
         return $path;
     }
 
+    /*** Localize a script */
+    public function wp_localize_script(string $handle, string $object_name, array $l10n){
+        wp_localize_script($handle, $object_name, $l10n);
+    }
+
     /**
      * Wordpress enqueue style
      * @var   string    $handle     Name of the script. Should be unique
@@ -67,10 +60,8 @@ trait Asset {
      * @var   bool      $media  	The media for which this stylesheet has been defined.
      */
     public function wp_enqueue_style($handle, $src = '', $deps = [], $ver = false, $media = 'all'){
-        if(!$this->core){
-            $path = json_decode(FAB_PATH)->plugin_url . 'assets/build/css/';
-            if(!strpos($src, '//')) $src = $path . $src;
-        }
+        $path = json_decode(FAB_PATH)->plugin_url . 'assets/';
+        if(!strpos($src, '//')) $src = $path . $src;
         wp_enqueue_style($handle, $src, $deps, $ver, $media);
     }
 
@@ -83,27 +74,23 @@ trait Asset {
      * @var   bool      $in_footer  	Whether to enqueue the script before </body> instead of in the <head>
      */
     public function wp_enqueue_script($handle, $src = '', $deps = [], $ver = false, $in_footer = false){
-        if(!$this->core) {
-            $path = json_decode(FAB_PATH)->plugin_url . 'assets/build/js/';
-            if (!strpos($src, '//')) $src = $path . $src;
-        }
+        $path = json_decode(FAB_PATH)->plugin_url . 'assets/';
+        if (!strpos($src, '//')) $src = $path . $src;
         wp_enqueue_script($handle, $src, $deps, $ver, $in_footer);
     }
 
     /**
-     * @return bool
+     * Enqueue assets at frontend
      */
-    public function isCore()
-    {
-        return $this->core;
-    }
-
-    /**
-     * @param bool $core
-     */
-    public function setCore($core)
-    {
-        $this->core = $core;
+    public function enqueue_assets($assets){
+        foreach($assets as $asset_id => $asset){
+            $asset = (object) $asset;
+            if( $asset->type=='css' && $asset->status ) {
+                $this->wp_enqueue_style($asset_id, $asset->src);
+            } elseif( $asset->type=='js' && $asset->status ) {
+                $this->wp_enqueue_script($asset_id, $asset->src, array(), '', isset($asset->in_footer) ? true : false );
+            }
+        }
     }
 
 }

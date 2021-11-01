@@ -8,18 +8,22 @@
         <div class="w-full overflow-hidden lg:w-1/4 px-2 py-2">
             <div class="bg-white shadow-md border border-gray-200 rounded-lg grid grid-cols-3 px-6 pt-4">
                 <div class="font-medium text-gray-600 col-span-2">
-                    <a href="<?= $asset->src ?>" target="_blank"><?= $asset_id ?></a>
+                    <?php
+                        $path = json_decode(FAB_PATH)->plugin_url . 'assets/';
+                        if(!strpos($asset->src, '//')) $asset->src = $path . $asset->src;
+                    ?>
+                    <a href="<?php echo $this->esc('url',$asset->src) ?>" target="_blank"><?php echo $this->esc('attr',$asset_id) ?></a>
                 </div>
                 <div>
                     <div class="flex mb-4 float-right">
-                        <label for="switch_option_backend_assets_<?= $asset_key ?>" class="flex cursor-pointer">
+                        <label for="switch_option_backend_assets_<?php echo $this->esc('attr',$asset_key) ?>" class="flex cursor-pointer">
                             <div class="relative">
                                 <input
                                     type="checkbox"
-                                    id="switch_option_backend_assets_<?= $asset_key ?>"
+                                    id="switch_option_backend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
                                     class="option_settings switch sr-only"
-                                    data-option="field_option_backend_assets_<?= $asset_key ?>"
-                                    <?= ($asset->status) ? 'checked' : '' ?>
+                                    data-option="field_option_backend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
+                                    <?php echo ($asset->status) ? 'checked' : '' ?>
                                 >
                                 <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
                                 <div class="fab absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
@@ -27,9 +31,9 @@
                         </label>
                         <input type="hidden"
                            class="field_option_backend_assets"
-                           id="field_option_backend_assets_<?= $asset_key ?>"
-                           value="<?= ($asset->status) ? true : false ?>"
-                           data-option="<?= $asset_id ?>"
+                           id="field_option_backend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
+                           value="<?php echo ($asset->status) ? true : false ?>"
+                           data-option="<?php echo $this->esc('attr',$asset_id) ?>"
                         >
                     </div>
                 </div>
@@ -47,18 +51,22 @@
         <div class="w-full overflow-hidden lg:w-1/4 px-2 py-2">
             <div class="bg-white shadow-md border border-gray-200 rounded-lg grid grid-cols-3 px-6 pt-4">
                 <div class="font-medium text-gray-600 col-span-2">
-                    <a href="<?= $asset->src ?>" target="_blank"><?= $asset_id ?></a>
+                    <?php
+                        $path = json_decode(FAB_PATH)->plugin_url . 'assets/';
+                        if(!strpos($asset->src, '//')) $asset->src = $path . $asset->src;
+                    ?>
+                    <a href="<?php echo $this->esc('url',$asset->src) ?>" target="_blank"><?php echo  $asset_id ?></a>
                 </div>
                 <div>
                     <div class="flex mb-4 float-right">
-                        <label for="switch_option_frontend_assets_<?= $asset_key ?>" class="flex cursor-pointer">
+                        <label for="switch_option_frontend_assets_<?php echo $this->esc('attr',$asset_key) ?>" class="flex cursor-pointer">
                             <div class="relative">
                                 <input
                                         type="checkbox"
-                                        id="switch_option_frontend_assets_<?= $asset_key ?>"
+                                        id="switch_option_frontend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
                                         class="option_settings switch sr-only"
-                                        data-option="field_option_frontend_assets_<?= $asset_key ?>"
-                                    <?= ($asset->status) ? 'checked' : '' ?>
+                                        data-option="field_option_frontend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
+                                    <?php echo ($asset->status) ? 'checked' : '' ?>
                                 >
                                 <div class="block bg-gray-300 w-10 h-6 rounded-full"></div>
                                 <div class="fab absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
@@ -66,9 +74,9 @@
                         </label>
                         <input type="hidden"
                                class="field_option_frontend_assets"
-                               id="field_option_frontend_assets_<?= $asset_key ?>"
-                               value="<?= ($asset->status) ? true : false ?>"
-                               data-option="<?= $asset_id ?>"
+                               id="field_option_frontend_assets_<?php echo $this->esc('attr',$asset_key) ?>"
+                               value="<?php echo ($asset->status) ? true : false ?>"
+                               data-option="<?php echo $this->esc('attr',$asset_id) ?>"
                         >
                     </div>
                 </div>
@@ -81,8 +89,8 @@
 <script>
     jQuery(document).ready(function($){
         let assets = {
-            backend: JSON.parse(`<?= json_encode($options->fab_assets->backend) ?>`),
-            frontend: JSON.parse(`<?= json_encode($options->fab_assets->frontend) ?>`),
+            backend: JSON.parse(`<?php echo json_encode($options->fab_assets->backend) ?>`),
+            frontend: JSON.parse(`<?php echo json_encode($options->fab_assets->frontend) ?>`),
         }
         /** Trigger on Submit */
         jQuery('#setting-form').submit(function() {

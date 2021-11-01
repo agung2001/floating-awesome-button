@@ -15,63 +15,50 @@
         </i>
     </div>
 
-    <!-- START: .rule-group  -->
-    <?php foreach($fab_location as $fab_loc): ?>
-    <div class="rule-group">
-        <div class="rule-item my-2">
-            <div class="grid grid-cols-5 gap-2">
-                <!-- START: "fab_setting_field[]"-->
+    <div id="element-rule-item" class="hidden">
+        <div class="rule-item">
+            <div class="grid grid-cols-5 my-2 gap-2">
+
+                <!-- START: "fab_location_type[]"-->
                 <div>
-                    <select name="fab_setting_field[]"  class="select2">
-                        <option value="0">--choose--</option>
-                        <?php foreach($when_data as $option): ?>
-                        <option <?= $option['id'] == $fab_loc['type'] ? 'selected="selected"':'' ?>
-                            value="<?= $option['id'] ?>">
-                            <?= $option['label'] ?>
-                        </option>
-                        <?php endforeach; ?>
-                    </select>
+                    <select name="fab_location_type[]" class="select2"></select>
                 </div>
-                <!-- END: "fab_setting_field[]"-->
+                <!-- END: "fab_location_type[]"-->
 
-                <!-- START: "fab_setting_operator[]"-->
+                <!-- START: "fab_location_operator[]"-->
                 <div class="">
-                    <select name="fab_setting_operator[]"  class="select2">
-                        <option <?= '==' == $fab_loc['operator'] ? 'selected="selected"':'' ?> value="=="
-                            selected="selected" data-i="0">is equal to</option>
-                        <option <?= '!=' == $fab_loc['operator'] ? 'selected="selected"':'' ?> value="!=">is not
-                            equal to</option>
-                    </select>
+                    <select name="fab_location_operator[]" class="select2"></select>
                 </div>
-                <!-- END: "fab_setting_operator[]"-->
+                <!-- END: "fab_location_operator[]"-->
 
-                <!-- START: "fab_setting_comparator[]"-->
-                <div class="col-span-2">
-                    <select name="fab_setting_comparator[]"  class="select2">
-                        <option value="0">--choose--</option>
-                        <?php foreach($fab_loc['compares'] as $optKey=>$optLabel): ?>
-                        <option <?= $optKey == $fab_loc['value'] ? 'selected="selected"':'' ?> value="<?= $optKey ?>">
-                            <?= $optLabel ?></option>
-                        <?php endforeach; ?>
-
-                    </select>
+                <!-- START: "fab_location_value[]"-->
+                <div class="">
+                    <select name="fab_location_value[]" class="select2"></select>
                 </div>
-                <!-- END: "fab_setting_comparator[]"-->
+                <!-- END: "fab_location_value[]"-->
 
                 <!-- START: button-->
                 <div>
-                    <button type="button" onclick="window.fabPlugin.remove_rule_item(this)"
-                        class="py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
+                    <button type="button" onclick="window.FAB_METABOX_LOCATION.remove_rule_item(this)"
+                            class="remove-rule-item py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
                         <i class="fas fa-minus"></i>
                     </button>
-                    <button type="button" onclick="window.fabPlugin.add_rule_group(this)"
-                        class="py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
+                    <button type="button" onclick="window.FAB_METABOX_LOCATION.add_rule_item()"
+                            class="add-rule-item py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
                 <!-- END: button-->
             </div>
         </div>
-    </div><!-- END: .rule-group  -->
-    <?php endforeach; ?>
+    </div>
+
+    <div id="rules-locations"></div>
+
 </div><!-- END: .fab-container  -->
+
+<script type="text/javascript">
+    jQuery(function($) {
+        window.FAB_METABOX_LOCATION.init();
+    });
+</script>

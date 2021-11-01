@@ -4,8 +4,6 @@
 
 # Library
 node_modules/
-vendor/
-assets/build/
 
 # Dummy
 composer.lock

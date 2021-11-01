@@ -119,7 +119,9 @@ class View {
      * @return  void
      */
     public function build(){
-        echo $this->loadContent('Template/' . $this->template);
+        echo $this->loadContent(sprintf('Template/%s',
+            $this->esc('attr', $this->template)
+        ));
     }
 
     /**

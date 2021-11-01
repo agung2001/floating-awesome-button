@@ -14,10 +14,21 @@ namespace Fab;
 class Plugin {
 
     /**
+     * @var     Plugin  $instance   Hold instance
+     */
+    private static $instance = null;
+
+    /**
      * Plugin name
      * @var     string
      */
     protected $name;
+
+    /**
+     * Plugin slug
+     * @var     string
+     */
+    protected $slug;
 
     /**
      * Plugin version
@@ -95,6 +106,8 @@ class Plugin {
         /** Initiate Plugin */
         $this->config = $this->getPluginConfig();
         $this->name = $this->config->name;
+        $this->slug = strtolower($this->config->name);
+        $this->slug = str_replace(' ','-', $this->slug);
         $this->version = $this->config->version;
         $this->production = $this->config->production;
         $this->enableHooks = $this->config->enableHooks;
@@ -224,6 +237,17 @@ class Plugin {
     }
 
     /**
+     * Get instance
+     * @return $this
+     */
+    public static function getInstance()
+    {
+        if (self::$instance == null)
+            self::$instance = new Plugin();
+        return self::$instance;
+    }
+
+    /**
      * @return string
      */
     public function getName(): string
@@ -237,6 +261,22 @@ class Plugin {
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     */
+    public function setSlug($slug): void
+    {
+        $this->slug = $slug;
     }
 
     /**

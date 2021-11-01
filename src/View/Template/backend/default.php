@@ -6,12 +6,12 @@
             <div class="text-white flex-shrink flex items-center relative rounded-lg bg-white py-2 px-4 mr-4 md:mr-8">
                 <div class="w-4 h-4 bg-primary-600 rounded-full"></div>
                 <h1 class="text-gray-800 text-lg font-medium ml-4">
-                    <?= $this->Page->getPageTitle() ?>
+                    <?php echo  $this->Page->getPageTitle() ?>
                 </h1>
             </div>
 
             <div class="md:w-auto md:flex-grow md:flex md:items-center absolute display-inline-block float-right right-0">
-                <ul class="fab-menu-desktop nav-tab-wrapper <?= (isset($disableTab)) ? '' : 'nav-tab-general' ?> <?= isset($active) ? 'tab-active' : '' ?>
+                <ul class="fab-menu-desktop nav-tab-wrapper <?php echo  (isset($disableTab)) ? '' : 'nav-tab-general' ?> <?php echo  isset($active) ? 'tab-active' : '' ?>
                 hidden sm:inline-flex flex-row cursor-pointer mx-4 pt-3">
                     <?php foreach($this->sections as $path => $section): ?>
                         <?php
@@ -20,11 +20,11 @@
                         ?>
                         <li
                             class="px-8 py-2 first:border-0 border-l-2 border-gray-100
-                            <?= $type ?> <?= ($active) ? 'tab-active' : '' ?>"
-                            data-tab="section-<?= $slug ?>"
+                            <?php echo  $type ?> <?php echo  ($active) ? 'tab-active' : '' ?>"
+                            data-tab="section-<?php echo  $slug ?>"
                         >
                             <div class="block">
-                                <?= $url ?>
+                                <?php echo  $url ?>
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -49,8 +49,8 @@
                                         $type = !strpos($url,'href') ? 'nav-nonurl' : '';
                                     ?>
                                         <div class="py-1">
-                                            <div data-tab="section-<?= $slug ?>" class="menu-item cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"  role="menuitem" >
-                                                <?= $url ?>
+                                            <div data-tab="section-<?php echo  $slug ?>" class="menu-item cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"  role="menuitem" >
+                                                <?php echo  $url ?>
                                             </div>
                                         </div>
                                 <?php endforeach; ?>
@@ -64,7 +64,7 @@
     </div>
     <?php if ( !$this->Helper->isPremiumPlan() && $this->Helper->getUpgradeURL() ):?>
         <div class="header bg-primary-500 text-white shadow-sm rounded-lg border border-gray-200 mt-6 mr-4">
-            <a href="<?= $this->Helper->getUpgradeURL() ?>">
+            <a href="<?php echo  $this->Helper->getUpgradeURL() ?>">
                 <div class="flex-shrink flex items-center relative rounded-lg py-4 px-6">
                     <i class="fas fa-exclamation"></i>
                     <p class="ml-4">
@@ -77,12 +77,12 @@
     <div class="content py-4 mr-4">
         <?php foreach($this->sections as $path => $section): ?>
             <?php extract($this->sectionLoopLogic($path, $section)); ?>
-            <div id="section-<?= $slug ?>" class="tab-content fab-sections <?= ($active) ? 'current' : '' ?>">
-                <?= $content ?>
+            <div id="section-<?php echo  $slug ?>" class="tab-content fab-sections <?php echo  ($active) ? 'current' : '' ?>">
+                <?php echo  $content ?>
             </div>
             <?php if($active): ?>
                 <div stlye="display:none;">
-                    <input type="hidden" name="activeSection" value="<?= $slug ?>">
+                    <input type="hidden" name="activeSection" value="<?php echo  $slug ?>">
                 </div>
             <?php endif; ?>
         <?php endforeach; ?>

@@ -8,11 +8,11 @@
             <div class="bg-white shadow-sm rounded-lg px-6 py-3">
                 <div class="float-right flex relative">
                     <h3 class="text-3xl font-medium inline-block p-2 mt-2 text-center transition focus:outline-none waves-effect">
-                            <span id="dot_active_hooks_<?= $slug ?>" class="text-primary-600 border-r-2 border-gray-100 px-5">
+                            <span id="fab_active_hooks_<?php echo  $slug ?>" class="text-primary-600 border-r-2 border-gray-100 px-5">
                                 0
                             </span>
                         <span class="text-gray-600 px-3">
-                                <?= count($featureHooks[$slug]) ?>
+                                <?php echo  count($featureHooks[$slug]) ?>
                             </span>
                     </h3>
                 </div>
@@ -23,11 +23,11 @@
                         </svg>
                     </div>
                     <h2 class="text-gray-600 text-xl">
-                        <?= $feature->getName() ?>
+                        <?php echo  $feature->getName() ?>
                     </h2>
                 </div>
                 <p class="ml-2">
-                    <?= $feature->getDescription() ?>
+                    <?php echo  $feature->getDescription() ?>
                 </p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-4 mb-12">
@@ -38,7 +38,7 @@
                     $namespaceKey = str_replace('\\','_', strtolower($namespace));
                     $hookName = preg_replace("/[^A-Za-z0-9_]/", '', strtolower($hook->getHook()) );
                     $callbackName = preg_replace("/[^A-Za-z0-9_]/", '', strtolower($hook->getCallback()) );
-                    $status = sprintf('dot_hooks_%s_%s_%s_%s', $namespaceKey, strtolower($name), $hookName, $callbackName);
+                    $status = sprintf('fab_hooks_%s_%s_%s_%s', $namespaceKey, strtolower($name), $hookName, $callbackName);
                     $status = (isset($options->$status)) ? $options->$status : $hook->isStatus(); // Option Exists
                     $status = ($status) ? true : false; // Grab option status
                     if($status==true || $hook->isMandatory()) $active_hooks++;
@@ -48,23 +48,23 @@
                         <div class="border-b-2 border-gray-100 mb-2">
                             <div class="float-right mt-2">
                                 <?php if(!$hook->isMandatory()){ ?>
-                                    <label for="switch_option_<?= $key ?>" class="flex cursor-pointer">
+                                    <label for="switch_option_<?php echo  $key ?>" class="flex cursor-pointer">
                                         <div class="relative">
                                             <input
                                                     type="checkbox"
-                                                    id="switch_option_<?= $key ?>"
+                                                    id="switch_option_<?php echo  $key ?>"
                                                     class="option_settings switch sr-only"
-                                                    data-option="field_option_<?= $key ?>"
-                                                <?= ($status==true || $hook->isMandatory()) ? 'checked' : '' ?>
+                                                    data-option="field_option_<?php echo  $key ?>"
+                                                <?php echo  ($status==true || $hook->isMandatory()) ? 'checked' : '' ?>
                                             >
                                             <div class="block bg-gray-300 w-8 h-5 rounded-full"></div>
                                             <div class="dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition"></div>
                                         </div>
                                     </label>
                                     <input type="hidden"
-                                           id="field_option_<?= $key ?>"
-                                           name="field_option_<?= $key ?>"
-                                           value="<?= ($status==true || $hook->isMandatory()) ? 'true' : 'false' ?>"
+                                           id="field_option_<?php echo  $key ?>"
+                                           name="field_option_<?php echo  $key ?>"
+                                           value="<?php echo  ($status==true || $hook->isMandatory()) ? 'true' : 'false' ?>"
                                     >
                                 <?php }else{ ?>
                                     <svg class="w-3 h-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="asterisk" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -73,13 +73,13 @@
                                 <?php } ?>
                             </div>
                             <h3 class="text-gray-600 font-semibold py-2">
-                                <?= $namespace ?> : <?= $name ?>
+                                <?php echo  $namespace ?> : <?php echo  $name ?>
                             </h3>
                         </div>
                         <div>
-                            Hook : <?= $hook->getHook() ?> <br/>
-                            Callback : <?= $hook->getCallback() ?> <br/>
-                            Description : <?= ($hook->getDescription()) ? $hook->getDescription() : '' ?> <br>
+                            Hook : <?php echo  $hook->getHook() ?> <br/>
+                            Callback : <?php echo  $hook->getCallback() ?> <br/>
+                            Description : <?php echo  ($hook->getDescription()) ? $hook->getDescription() : '' ?> <br>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -87,7 +87,7 @@
         <?php endif; ?>
             <script>
                 /** Show number of active hooks */
-                jQuery('#dot_active_hooks_<?= $slug ?>').html('<?= $active_hooks ?>');
+                jQuery('#fab_active_hooks_<?php echo  $slug ?>').html('<?php echo  $active_hooks ?>');
             </script>
         <?php endforeach; ?>
         <!-- Features -->

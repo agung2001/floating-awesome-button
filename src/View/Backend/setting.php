@@ -10,7 +10,7 @@
                 );
                 if(file_exists($config_path)):
                     ?>
-                    <div id="setting-<?= $key ?>" class="bg-white shadow-sm rounded-lg px-6 py-2 mb-4 z-0">
+                    <div id="setting-<?php echo  $key ?>" class="bg-white shadow-sm rounded-lg px-6 py-2 mb-4 z-0">
 
                         <div class="px-1 py-4">
                             <div class="flex items-center relative pb-4">
@@ -20,11 +20,11 @@
                                     </svg>
                                 </div>
                                 <h2 class="text-gray-600 text-2xl">
-                                    <?= $feature->getName() ?>
+                                    <?php echo  $feature->getName() ?>
                                 </h2>
                             </div>
 
-                            <?= $this->loadContent('Backend/Settings/.' . $feature->getName()) ?>
+                            <?php echo  $this->loadContent('Backend/Settings/.' . $feature->getName()) ?>
 
                         </div>
                     </div>
@@ -39,9 +39,9 @@
                 <div class="bg-cover-image shadow-sm bg-center bg-cover px-6 py-16">
                     <div class="w-3/4 mx-auto">
                         <img
-                                class="animate__animated animate__<?= $options->fab_animation_logo ?>"
-                                src="<?= json_decode(FAB_PATH)->plugin_url ?>/assets/img/logo.png"
-                                alt="<?= $this->Page->getPageTitle() ?>"
+                                class="animate__animated animate__<?php echo  $options->fab_animation->elements->logo ?>"
+                                src="<?php echo  json_decode(FAB_PATH)->plugin_url ?>/assets/img/logo.png"
+                                alt="<?php echo  $this->Page->getPageTitle() ?>"
                         >
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         );
                         if(!file_exists($config_path)) continue; ?>
                         <li class="my-px">
-                            <a href="#setting-<?= $key ?>"
+                            <a href="#setting-<?php echo  $key ?>"
                                class="smooth-scroll flex flex-row items-center h-12 px-4 rounded-lg text-gray-600 hover:bg-gray-100">
                                 <span class="flex items-center justify-center text-lg text-gray-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +65,7 @@
                                     </svg>
                                 </span>
                                 <span class="ml-3">
-                                    <?= $feature->getName() ?>
+                                    <?php echo  $feature->getName() ?>
                                 </span>
                             </a>
                         </li>
@@ -97,28 +97,16 @@
         Are you sure you want to reset the setting?
     </form>
 </div>
-<script>
-    jQuery('.reset-option').click(function(){
-        jQuery.confirm({
-            icon: 'fas fa-sync',
-            closeIcon: true,
-            animation: 'scale',
-            columnClass: 'j-small',
-            title: 'Reset',
-            content: jQuery('#clear-config').html(),
-            buttons: {
-                confirm: function () {
-                    jQuery('#clear-config-form ').submit();
-                },
-                cancel: function () {}
-            }
-        });
+<script type="text/javascript">
+    /** Initiate Setting Scripts */
+    jQuery(function($) {
+        window.FAB_PLUGIN.init_setting();
     });
 </script>
 
 <!-- Alert when form is saved -->
 <?php if($result): ?>
-    <script>
+    <script type="text/javascript">
         jQuery.dialog({
             icon: 'fas fa-check',
             closeIcon: true,

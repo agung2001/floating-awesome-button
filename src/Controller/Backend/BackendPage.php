@@ -34,10 +34,7 @@ class BackendPage extends Base {
         $action->setMandatory(true);
         $action->setFeature($plugin->getFeatures()['core_backend']);
         $this->hooks[] = $action;
-        
-        
     }
-    
     
     /**
     * Page Setting
@@ -46,8 +43,7 @@ class BackendPage extends Base {
     */
     public function page_setting(){
         /** Plugin slug */
-        $slug = strtolower($this->Plugin->getName());
-        $slug = str_replace(' ','-', $slug) . '-setting';
+        $slug = sprintf('%s-setting',$this->Plugin->getSlug());
 
         /** Handle submission config */
         if(isset($_GET['page']) && $_GET['page']==$slug){

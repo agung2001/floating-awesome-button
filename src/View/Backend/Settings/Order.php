@@ -1,22 +1,18 @@
-<?php 
-
-$Fab = $this->Plugin->getModels()['Fab'];
-$setting_type = $Fab->getSettingType();
-$fab_order = $Fab->get_fab_to_order();
-$ids = $fab_order['ids'];
-$fab_items = $fab_order['items'];
+<?php
+    /** Grab Data */
+    $data = $this->Plugin->getModels()['Fab'];
+    $data = $data->get_lists_of_fab();
 ?>
-<input type="hidden" name="fab_order" value="<?= json_encode($ids) ?>">
+<input type="hidden" name="fab_order" value="<?php echo  json_encode($data['order']) ?>">
 <div class="flex flex-wrap overflow-hidden">
     <div id="fab-order" class="w-full">
-        <?php foreach($fab_items as $fab_item): ?>
-            <div data-id="<?= $fab_item['id']; ?>"
+        <?php foreach($data['items'] as $fab): ?>
+            <div data-id="<?php echo  $fab->getID(); ?>"
                 class="bg-white fab-item shadow-md border border-gray-200 rounded-lg px-6 py-4 mb-2 cursor-grab">
-                <i class="<?= $fab_item['icon_class'] ?> text-primary-600 mr-2"></i>
-                <?= get_the_title($fab_item['id'] ) ?> [<?= $setting_type[$fab_item['type']] ?>]
+                <i class="<?php echo  $fab->getIconClass() ?> text-primary-600 mr-2"></i>
+                <?php echo $fab->getTitle() ?> [<?php echo $fab->getType() ?>]
             </div>
-            <?php endforeach; ?>
-            
+        <?php endforeach; ?>
     </div>
 </div>
 <script>
@@ -26,7 +22,6 @@ $fab_items = $fab_order['items'];
                 let orders = $.map($(this).find('.fab-item'), (el)=>{
                     return $(el).data('id');
                 });
-                
                 $('input[name="fab_order"]').val(JSON.stringify(orders));
             }
         });

@@ -3,7 +3,7 @@
  * Plugin Name:       Floating Awesome Button
  * Plugin URI:        https://artistudio.xyz
  * Description:       Floating Awesome Button (FAB) is customizable action button that can help you display custom content (modal, shortcodes, widgets, links, etc).
- * Version:           1.1.3
+ * Version:           1.1.4
  * Author:            Agung Sundoro
  * Author URI:        https://wiki.artistudio.xyz/
  * License:           GPL-3.0

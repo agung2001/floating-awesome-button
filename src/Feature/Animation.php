@@ -24,13 +24,6 @@ class Animation extends Feature {
         $this->key = 'core_animation';
         $this->name = 'Animation';
         $this->description = 'Handles plugin core animation';
-        $this->options = [
-            'fab_animation',
-            'fab_animation_tab',
-            'fab_animation_content',
-            'fab_animation_active',
-            'fab_animation_inactive',
-        ];
     }
 
 }

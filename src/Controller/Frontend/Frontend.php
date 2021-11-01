@@ -40,6 +40,7 @@ class Frontend extends Base {
         $action->setHook('wp_enqueue_scripts');
         $action->setCallback('frontend_enequeue');
         $action->setAcceptedArgs(1);
+        $action->setPriority(20);
         $action->setFeature($plugin->getFeatures()['core_frontend']);
         $this->hooks[] = $action;
 
@@ -59,7 +60,28 @@ class Frontend extends Base {
      */
     public function frontend_enequeue($hook_suffix){
         define('FAB_SCREEN', json_encode($this->WP->getScreen()));
-        $this->frontend_load_plugin_libraries(['page'], ['docs', 'post','page']);
+        $config = $this->WP->get_option('fab_config');
+
+        /** Load Inline Script */
+        $this->WP->wp_enqueue_script('fab-local', "local/fab.js", [], '', true);
+        $this->WP->wp_localize_script( 'fab-local', 'FAB_PLUGIN', array(
+            'name' => FAB_NAME,
+            'version' => FAB_VERSION,
+            'screen' => FAB_SCREEN,
+            'path' => FAB_PATH,
+            'options' => [
+                'animation' => $config->fab_animation,
+            ],
+        ) );
+
+        /** Load Vendors */
+        if(isset($config->fab_animation->enable) && $config->fab_animation->enable)
+            $this->WP->wp_enqueue_style('animatecss', "vendor/animatecss/animate.min.css");
+        $this->WP->enqueue_assets($config->fab_assets->frontend);
+
+        /** Load Plugin Assets */
+        $this->WP->wp_enqueue_style('fab', "build/css/frontend.min.css");
+        $this->WP->wp_enqueue_script('fab', "build/js/frontend/plugin.min.js", [], '', true);
     }
 
     /**
@@ -68,29 +90,34 @@ class Frontend extends Base {
      */
     public function wp_footer(){
         global $post;
-        
         $Fab = $this->Plugin->getModels()['Fab'];
-        $fab_to_display = $Fab->get_fab_to_display($post);
-        
-        $view = new View($this->Plugin);
-        $view->setTemplate('frontend.blank');
-        $view->setSections([ 'Frontend.float_button' => ['name' => 'Float Button','active' => true] ]);
-        $view->setData(compact('post','fab_to_display'));
-        $view->setOptions(['shortcode' => false]);
-        $view->build();
-        
+        $fab_to_display = $Fab->get_lists_of_fab(['validateLocation' => true])['items'];
+
+        /** Show FAB Button */
+        if( !is_admin() && $fab_to_display ){
+            $view = new View($this->Plugin);
+            $view->setTemplate('frontend.blank');
+            $view->setSections([ 'Frontend.float_button' => ['name' => 'Float Button','active' => true] ]);
+            $view->setData(compact('post','fab_to_display'));
+            $view->setOptions(['shortcode' => false]);
+            $view->build();
+        }
     }
 
     /** Register widgets */
     public function fab_register_widget()
     {
+        /** Grab FAB with widget type */
         $Fab = $this->Plugin->getModels()['Fab'];
-        $widgets = $Fab->get_fab_widget();
-        
+        $widgets = $Fab->get_lists_of_fab([
+            'filterbyType' => ['widget','widget_content']
+        ])['items'];
+
+        /** Register Sidebar */
         foreach($widgets as $widget){
             register_sidebar( array(
-                'name' => __( $widget['name'], 'fab-widget-'.$widget['id'] ),
-                'id' => 'fab-widget-'.$widget['slug'],
+                'name' => __( $widget->getTitle(), 'fab-widget-' . $widget->getSlug() ),
+                'id' => 'fab-widget-' . $widget->getSlug(),
                 'before_widget' => '<div id="%1$s" class="widget fab-container %2$s">',
                 'after_widget' => '</div>',
                 'before_title' => '<h3 class="widgettitle">',

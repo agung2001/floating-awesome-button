@@ -58,6 +58,9 @@ If you enjoy it please feel free to spread the words ;)
 
 == Changelog ==
 
+= 1.1.4 =
+* Add REST API support for multiple post types
+
 = 1.1.3 =
 * Initial release. First Version.
 

@@ -14,7 +14,6 @@ namespace Fab;
 class Helper {
 
     /** Load Trait */
-    use Helper\Html;
     use Helper\Directory;
     use Helper\Text;
     use Helper\Plan;
@@ -25,14 +24,6 @@ class Helper {
      */
     public function __construct(\Fab\Plugin $plugin){
         $this->Plugin = $plugin;
-    }
-
-    /**
-     * Debug script
-     * @return void
-     */
-    public function debug($data){
-        echo '<pre>'; var_dump($data);
     }
 
     /**
