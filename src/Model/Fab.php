@@ -1,15 +1,14 @@
 <?php
+/**
+ * Initiate plugins
+ *
+ * @package    Fab
+ * @subpackage Fab/Model
+ */
 
 namespace Fab\Model;
 
-!defined( 'WPINC ' ) or die;
-
-/**
-* Initiate plugins
-*
-* @package    Fab
-* @subpackage Fab/Model
-*/
+! defined( 'WPINC ' ) || die;
 
 use Fab\Helper\FABMetaboxLocation;
 use Fab\Helper\FABMetaboxSetting;
@@ -17,115 +16,135 @@ use Fab\Wordpress\Hook\Action;
 use Fab\Helper\FABItem;
 
 class Fab extends Model {
-    
-    /** global $post */
-    protected $post;
 
-    /**
-    * constructor
-    * @return void
-    * @var    object $plugin Plugin configuration
-    * @pattern prototype
-    */
-    public function __construct(\Fab\Plugin $plugin){
+	/**
+	 * @var array   WordPress global $post variable.
+	 */
+	protected $post;
 
-        /** Create a post type */
-        parent::__construct($plugin);
-        $this->args['public'] = true;
-        $this->args['publicly_queryable'] = false;
-        $this->args['menu_icon'] = json_decode(FAB_PATH)->plugin_url . '/assets/img/icon.png';
-        $this->args['has_archive'] = false;
+	/**
+	 * Constructor
+	 *
+	 * @param \Fab\Plugin $plugin
+	 */
+	public function __construct( \Fab\Plugin $plugin ) {
 
-        /** @backend - Save Metabox Setting to postmeta */
-        $action = new Action();
-        $action->setComponent($this);
-        $action->setHook("save_post");
-        $action->setCallback('metabox_save_data');
-        $action->setMandatory(true);
-        $action->setDescription('Save FAB Metabox Data');
-        $this->hooks[] = $action;
+		/** Create a post type */
+		parent::__construct( $plugin );
+		$this->args['public']             = true;
+		$this->args['publicly_queryable'] = false;
+		$this->args['menu_icon']          = json_decode( FAB_PATH )->plugin_url . '/assets/img/icon.png';
+		$this->args['has_archive']        = false;
 
-    }  
-    
-    /**
-    * Save metabox data when post is saving
-    * @return void
-    */
-    public function metabox_save_data()
-    {
-        global $post;
+		/**
+		 * Save Metabox Setting to postmeta
+		 *
+		 * @backend
+		 */
+		$action = new Action();
+		$action->setComponent( $this );
+		$action->setHook( 'save_post' );
+		$action->setCallback( 'metabox_save_data' );
+		$action->setMandatory( true );
+		$action->setDescription( 'Save FAB Metabox Data' );
+		$this->hooks[] = $action;
 
-        /** Check Correct Post Type, Ignore Trash */
-        if( !isset($post->ID) || $post->post_type!='fab' || $post->post_status=='trash') return;
+	}
 
-        /** Save Metabox Setting */
-        $FABMetaboxSetting = new FABMetaboxSetting();
-        $FABMetaboxSetting->sanitize();
-        $FABMetaboxSetting->setDefaultInput();
-        $FABMetaboxSetting->save();
+	/**
+	 * Save metabox data when post is saving
+	 *
+	 * @return void
+	 */
+	public function metabox_save_data() {
+		global $post;
 
-        /** Save Metabox Location */
-        $FABMetaboxLocation = new FABMetaboxLocation();
-        $FABMetaboxLocation->sanitize();
-        $FABMetaboxLocation->transformData();
-        $FABMetaboxLocation->save();
-    }
+		/** Check Correct Post Type, Ignore Trash */
+		if ( ! isset( $post->ID ) || $post->post_type !== 'fab' || $post->post_status === 'trash' ) {
+			return;
+		}
 
-    /**
-     * Return fabs item and fabs order
-     */
-    public function get_lists_of_fab($args = []){
-        /** Data */
-        $order = [];
-        $items = [];
+		/** Save Metabox Setting */
+		$FABMetaboxSetting = new FABMetaboxSetting();
+		$FABMetaboxSetting->sanitize();
+		$FABMetaboxSetting->setDefaultInput();
+		$FABMetaboxSetting->save();
 
-        /** Grab Data - Ordered Data */
-        $fab_order = $this->WP->get_option('fab_config')->fab_order;
-        if($fab_order){
-            $order = $fab_order;
-            foreach($fab_order as $value)
-                $items[] = get_post($value);
-        }
+		/** Save Metabox Location */
+		$FABMetaboxLocation = new FABMetaboxLocation();
+		$FABMetaboxLocation->sanitize();
+		$FABMetaboxLocation->transformData();
+		$FABMetaboxLocation->save();
+	}
 
-        /** Grab Data - Unordered */
-        $items = array_merge($items, get_posts([
-            'posts_per_page' => -1,
-            'post_type' => $this->getName(),
-            'post_status' => ['publish'],
-            'post__not_in'=> empty($fab_order) ?
-                [ 'empty' ] : $fab_order,
-            'orderby' => 'post_date',
-            'order' => 'DESC',
-        ]));
+	/**
+	 * Return fabs item and fabs order
+	 *
+	 * @param array $args   Arguments.
+	 * @return array
+	 */
+	public function get_lists_of_fab( $args = array() ) {
+		/** Data */
+		$order = array();
+		$items = array();
 
-        /** Filter by Location */
-        $tmp = [];
-        foreach($items as &$item){
-            $item = new FABItem($item->ID); // Grab FAB Item
-            $order[] = $item->getID();
-            if( isset($args['validateLocation']) &&
-                !empty($item->getLocations()) &&
-                !$item->isToBeDisplayed()
-            ) continue; // Check location rules
-            $tmp[] = $item; // tmp location
-        }
-        $items = $tmp;
+		/** Grab Data - Ordered Data */
+		$fab_order = $this->WP->get_option( 'fab_config' )->fab_order;
+		if ( $fab_order ) {
+			$order = $fab_order;
+			foreach ( $fab_order as $value ) {
+				$items[] = get_post( $value );
+			}
+		}
 
-        /** Filter by Type */
-        if( isset($args['filterbyType']) ){
-            $tmp = [];
-            foreach($items as $item){
-                if( in_array($item->getType(),$args['filterbyType']) )
-                    $tmp[] = $item;
-            }
-            $items = $tmp;
-        }
+		/** Grab Data - Unordered */
+		$items = array_merge(
+			$items,
+			get_posts(
+				array(
+					'posts_per_page' => -1,
+					'post_type'      => $this->getName(),
+					'post_status'    => array( 'publish' ),
+					'post__not_in'   => empty( $fab_order ) ?
+						array( 'empty' ) : $fab_order,
+					'orderby'        => 'post_date',
+					'order'          => 'DESC',
+				)
+			)
+		);
 
-        return [
-            'order' => $order,
-            'items' => $items,
-        ];
-    }
+		/** Filter by Location */
+		$tmp = array();
+		foreach ( $items as &$item ) {
+			$item    = new FABItem( $item->ID ); // Grab FAB Item.
+			$order[] = $item->getID();
+			if ( isset( $args['validateLocation'] ) &&
+				! empty( $item->getLocations() ) &&
+				! $item->isToBeDisplayed()
+			) {
+				continue; // Check location rules.
+			}
+			$tmp[] = $item; // tmp location.
+		}
+		unset( $item );
+		$items = $tmp;
+
+		/** Filter by Type */
+		if ( isset( $args['filterbyType'] ) ) {
+			$tmp = array();
+			foreach ( $items as $item ) {
+				if ( in_array( $item->getType(), $args['filterbyType'] ) ) {
+					$tmp[] = $item;
+				}
+			}
+			$items = $tmp;
+		}
+
+		return array(
+			'order' => $order,
+			'items' => $items,
+		);
+	}
 
 }
 

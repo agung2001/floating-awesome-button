@@ -2,65 +2,62 @@
 
 namespace Fab\Wordpress\Model;
 
-!defined( 'WPINC ' ) or die;
+! defined( 'WPINC ' ) || die;
 
 /**
- * Abstract class for wordpress model
+ * Abstract class for WordPress model
  *
  * @package    Fab
  * @subpackage Fab\Includes\Wordpress
  */
 
 abstract class Model {
-    
-    /**
-     * @access   protected
-     * @var      string    $name    The name of post_type
-     */
-    protected $name;
 
-    /**
-     * @access   protected
-     * @var      array    $args    Post type args
-     */
-    protected $args;
+	/**
+	 * @access   protected
+	 * @var      string    $name    The name of post_type
+	 */
+	protected $name;
 
-    /**
-     * Method to build model
-     * @return  void
-     */
-    abstract function build();
+	/**
+	 * @access   protected
+	 * @var      array    $args    Post type args
+	 */
+	protected $args;
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+	/**
+	 * Method to build model
+	 *
+	 * @return  void
+	 */
+	abstract function build();
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
 
-    /**
-     * @return array
-     */
-    public function getArgs()
-    {
-        return $this->args;
-    }
+	/**
+	 * @param string $name
+	 */
+	public function setName( $name ) {
+		$this->name = $name;
+	}
 
-    /**
-     * @param array $args
-     */
-    public function setArgs($args)
-    {
-        $this->args = $args;
-    }
+	/**
+	 * @return array
+	 */
+	public function getArgs() {
+		return $this->args;
+	}
+
+	/**
+	 * @param array $args
+	 */
+	public function setArgs( $args ) {
+		$this->args = $args;
+	}
 
 }

@@ -3,7 +3,7 @@
  * Plugin Name:       Floating Awesome Button
  * Plugin URI:        https://artistudio.xyz
  * Description:       Floating Awesome Button (FAB) is customizable action button that can help you display custom content (modal, shortcodes, widgets, links, etc).
- * Version:           1.1.4
+ * Version:           1.2.0
  * Author:            Agung Sundoro
  * Author URI:        https://wiki.artistudio.xyz/
  * License:           GPL-3.0
@@ -17,7 +17,7 @@
  * this software, please review the license.txt
 */
 
-!defined( 'WPINC ' ) or die;
+! defined( 'WPINC ' ) or die;
 
 /** Load Composer Vendor */
 require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
@@ -26,12 +26,13 @@ require plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 require plugin_dir_path( __FILE__ ) . 'freemius.php';
 
 /** Initiate Plugin */
-$FAB = new Fab\Plugin();
-$FAB->run();
+$fab = new Fab\Plugin();
+$fab->run();
 
 /** Activation Hook */
-register_activation_hook( __FILE__, [ new Fab\Plugin(), 'activate' ]);
+register_activation_hook( __FILE__, array( new Fab\Plugin(), 'activate' ) );
 
 /** Uninstall Hook */
-register_uninstall_hook( __FILE__, 'uninstall_fab_plugin');
-function uninstall_fab_plugin(){ delete_option( 'fab_config' ); }
+register_uninstall_hook( __FILE__, 'uninstall_fab_plugin' );
+function uninstall_fab_plugin() {
+	delete_option( 'fab_config' ); }

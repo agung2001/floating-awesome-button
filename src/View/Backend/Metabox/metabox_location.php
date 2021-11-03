@@ -1,18 +1,26 @@
+<?php
+/**
+ * Metabox Location
+ *
+ * @package FAB
+ */
+?>
+
 <!-- START: .fab-container  -->
 <div class="fab-container metabox-location">
     <!-- metabox title -->
     <div class="font-medium text-gray-600 pt-2 col-span-5">
         Rules
         <div class="text-gray-400">
-            <i class="field-info">
+            <em class="field-info">
                 Create a set of rules...
-            </i>
+            </em>
         </div>
     </div>
     <div class="text-gray-400">
-        <i class="field-info">
+        <em class="field-info">
             Show If:
-        </i>
+        </em>
     </div>
 
     <div id="element-rule-item" class="hidden">
@@ -41,11 +49,11 @@
                 <div>
                     <button type="button" onclick="window.FAB_METABOX_LOCATION.remove_rule_item(this)"
                             class="remove-rule-item py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
-                        <i class="fas fa-minus"></i>
+                        <em class="fas fa-minus"></em>
                     </button>
                     <button type="button" onclick="window.FAB_METABOX_LOCATION.add_rule_item()"
                             class="add-rule-item py-3 mx-auto px-5 bg-white text-gray-500 border border-gray-300 rounded-md cursor-pointer">
-                        <i class="fas fa-plus"></i>
+                        <em class="fas fa-plus"></em>
                     </button>
                 </div>
                 <!-- END: button-->

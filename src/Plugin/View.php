@@ -2,7 +2,7 @@
 
 namespace Fab;
 
-!defined( 'WPINC ' ) or die;
+! defined( 'WPINC ' ) or die;
 
 /**
  * Helper library for Triangle plugins
@@ -12,212 +12,212 @@ namespace Fab;
  */
 
 class View {
-    
-    /**
-     * Provide page information page_title, menu_title, etc
-     * @var     object  $Page   Page object where the view is located
-     */
-    protected $Page;
 
-    /**
-     * @var     object  $Helper   Helper object for view
-     */
-    protected $Helper;
+	/**
+	 * Provide page information page_title, menu_title, etc
+	 *
+	 * @var     object  $Page   Page object where the view is located
+	 */
+	protected $Page;
 
-    /**
-     * @access   protected
-     * @var      array    $sections    	Lists of view path callback to load
-     */
-    protected $sections;
+	/**
+	 * @var     object  $Helper   Helper object for view
+	 */
+	protected $Helper;
 
-    /**
-     * @access   protected
-     * @var      string    $template    	View template callback to load
-     */
-    protected $template;
+	/**
+	 * @access   protected
+	 * @var      array    $sections     Lists of view path callback to load
+	 */
+	protected $sections;
 
-    /**
-     * View data send from the controller
-     * @var     array   $data    View data
-     */
-    protected $data;
+	/**
+	 * @access   protected
+	 * @var      string    $template        View template callback to load
+	 */
+	protected $template;
 
-    /**
-     * Enable/Disable (Shortcode, etc)
-     * @var     array   $options    View options
-     */
-    protected $options;
+	/**
+	 * View data send from the controller
+	 *
+	 * @var     array   $data    View data
+	 */
+	protected $data;
 
-    /**
-     * View constructor
-     * @return void
-     */
-    public function __construct($plugin){
-        $this->Plugin = $plugin;
-        $this->Helper = (method_exists($plugin, 'getHelper')) ? $plugin->getHelper() : '';
-        $this->WP = (method_exists($plugin, 'getWP')) ? $plugin->getWP() : '';
-        $this->data = [];
-        $this->options = [];
-    }
+	/**
+	 * Enable/Disable (Shortcode, etc)
+	 *
+	 * @var     array   $options    View options
+	 */
+	protected $options;
 
-    /**
-     * View constructor
-     * @return void
-     */
-    public function addData($data){
-        foreach($data as $key => $value) $this->data[$key] = $value;
-    }
+	/**
+	 * View constructor
+	 *
+	 * @return void
+	 */
+	public function __construct( $plugin ) {
+		$this->Plugin  = $plugin;
+		$this->Helper  = ( method_exists( $plugin, 'getHelper' ) ) ? $plugin->getHelper() : '';
+		$this->WP      = ( method_exists( $plugin, 'getWP' ) ) ? $plugin->getWP() : '';
+		$this->data    = array();
+		$this->options = array();
+	}
 
-    /**
-     * Helper to load content
-     * @backend
-     * @return  content
-     */
-    public function loadContent($content, $args = []){
-        ob_start();
-        extract($this->data);
-        $path = json_decode(FAB_PATH);
-        require $path->view_path . str_replace('.','/',$content) . '.php';
-        $content = ob_get_clean();
-        if(isset($this->options['shortcode']) && $this->options['shortcode']) $content = do_shortcode($content);
-        return $content;
-    }
+	/**
+	 * View constructor
+	 *
+	 * @return void
+	 */
+	public function addData( $data ) {
+		foreach ( $data as $key => $value ) {
+			$this->data[ $key ] = $value;
+		}
+	}
 
-    /**
-     * Helper to handle data logic within section loop
-     * - Slugify
-     * - Determine active tab
-     * - Determine which content to load
-     * - Convert url for url type sections
-     */
-    public function sectionLoopLogic($path, $section){
-        $data = array();
-        $data['slug'] = str_replace(' ','',strtolower($section['name']));
-        $data['active'] = isset($section['active']) ? true : false;
-        $data['content'] = (isset($section['link']) && !$data['active']) ? '' : $this->loadContent($path); /** Handle url sections type */
-        $data['content'] = (isset($section['link']) && strpos($section['link'], '//') ) ? $section['link'] : $data['content']; /** Handle http:// link */
-        if( isset($section['link']) && !strpos($section['link'], '//') ) {
-            $data['url'] = $this->WP->Page->add_query_arg(NULL, NULL) . '&section=' . $section['link'];
-            $data['url'] = json_decode(FAB_PATH)['home_url'] . $data['url'];
-            $data['url'] = '<a id="tab-' . $data['slug'] . '" href="' . $data['url'] . '">' . $section['name'] . '</a>';
-        } elseif( isset($section['link']) && strpos($section['link'], '//') ){
-            $data['url'] = '<a id="tab-' . $data['slug'] . '" href="' . $section['link'] . '" target="_blank">' . $section['name'] . '</a>';
-        } else { $data['url'] = $section['name']; }
-        return $data;
-    }
+	/**
+	 * Helper to load content
+	 *
+	 * @backend
+	 * @return  content
+	 */
+	public function loadContent( $content, $args = array() ) {
+		extract( $this->data );
+		$path = json_decode( FAB_PATH );
+		require sprintf(
+			'%s%s.php',
+			$path->view_path,
+			str_replace( '.', '/', $content )
+		);
+	}
 
-    /**
-     * Escape function generated within Service.php class
-     * @return mixed    Return escape value
-     */
-    public function esc($type, $value, $args = []){
-        return $this->WP->esc($type, $value, $args);
-    }
+	/**
+	 * Helper to handle data logic within section loop
+	 * - Slugify
+	 * - Determine active tab
+	 * - Determine which content to load
+	 * - Convert url for url type sections
+	 */
+	public function sectionLoopLogic( $path, $section ) {
+		$data            = array();
+		$data['slug']    = str_replace( ' ', '', strtolower( $section['name'] ) );
+		$data['active']  = isset( $section['active'] ) ? true : false;
+		$data['content'] = ( isset( $section['link'] ) && ! $data['active'] ) ? '' : $path; /** Handle url sections type */
+		if ( isset( $section['link'] ) && ! strpos( $section['link'], '//' ) ) {
+			$data['url'] = $this->WP->Page->add_query_arg( null, null ) . '&section=' . $section['link'];
+			$data['url'] = json_decode( FAB_PATH )['home_url'] . $data['url'];
+            $data['url'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
+                'tab-'. $data['slug'],
+                $section['link'],
+                $section['name'],
+            );
+		} elseif ( isset( $section['link'] ) && strpos( $section['link'], '//' ) ) {
+            $data['url'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
+                'tab-'. $data['slug'],
+                $section['link'],
+                $section['name'],
+            );
+		} else {
+			$data['url'] = $section['name'];}
+		return $data;
+	}
 
-    /**
-     * Build view
-     * @return  void
-     */
-    public function build(){
-        echo $this->loadContent(sprintf('Template/%s',
-            $this->esc('attr', $this->template)
-        ));
-    }
+	/**
+	 * Build view, echo html content
+	 *
+	 * @return  void
+	 */
+	public function build() {
+		$this->loadContent(
+			sprintf(
+				'Template/%s',
+				esc_attr( $this->template )
+			)
+		);
+	}
 
-    /**
-     * @return object
-     */
-    public function getPage()
-    {
-        return $this->Page;
-    }
+	/**
+	 * @return object
+	 */
+	public function getPage() {
+		return $this->Page;
+	}
 
-    /**
-     * @param object $Page
-     */
-    public function setPage($Page)
-    {
-        $this->Page = $Page;
-    }
+	/**
+	 * @param object $Page
+	 */
+	public function setPage( $Page ) {
+		$this->Page = $Page;
+	}
 
-    /**
-     * @return object
-     */
-    public function getHelper()
-    {
-        return $this->Helper;
-    }
+	/**
+	 * @return object
+	 */
+	public function getHelper() {
+		return $this->Helper;
+	}
 
-    /**
-     * @param object $Helper
-     */
-    public function setHelper($Helper)
-    {
-        $this->Helper = $Helper;
-    }
+	/**
+	 * @param object $Helper
+	 */
+	public function setHelper( $Helper ) {
+		$this->Helper = $Helper;
+	}
 
-    /**
-     * @return array
-     */
-    public function getSections()
-    {
-        return $this->sections;
-    }
+	/**
+	 * @return array
+	 */
+	public function getSections() {
+		return $this->sections;
+	}
 
-    /**
-     * @param array $sections
-     */
-    public function setSections($sections)
-    {
-        $this->sections = $sections;
-    }
+	/**
+	 * @param array $sections
+	 */
+	public function setSections( $sections ) {
+		$this->sections = $sections;
+	}
 
-    /**
-     * @return string
-     */
-    public function getTemplate()
-    {
-        return $this->template;
-    }
+	/**
+	 * @return string
+	 */
+	public function getTemplate() {
+		return $this->template;
+	}
 
-    /**
-     * @param string $template
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-    }
+	/**
+	 * @param string $template
+	 */
+	public function setTemplate( $template ) {
+		$this->template = $template;
+	}
 
-    /**
-     * @return array
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
+	/**
+	 * @return array
+	 */
+	public function getData() {
+		return $this->data;
+	}
 
-    /**
-     * @param array $data
-     */
-    public function setData($data)
-    {
-        $this->data = $data;
-    }
+	/**
+	 * @param array $data
+	 */
+	public function setData( $data ) {
+		$this->data = $data;
+	}
 
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
+	/**
+	 * @return array
+	 */
+	public function getOptions() {
+		return $this->options;
+	}
 
-    /**
-     * @param array $options
-     */
-    public function setOptions($options)
-    {
-        $this->options = $options;
-    }
+	/**
+	 * @param array $options
+	 */
+	public function setOptions( $options ) {
+		$this->options = $options;
+	}
 
 }
