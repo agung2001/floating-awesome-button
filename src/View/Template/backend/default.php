@@ -16,7 +16,7 @@
 					<?php foreach ( $this->sections as $path => $section ) : ?>
 						<?php
 							extract( $this->sectionLoopLogic( $path, $section ) );
-							$type = ! strpos( $url, 'href' ) ? 'nav-nonurl' : '';
+							$type = ! strpos( $tab, 'href' ) ? 'nav-nonurl' : '';
 						?>
 						<li
 							class="px-8 py-2 first:border-0 border-l-2 border-gray-100
@@ -24,7 +24,10 @@
 							data-tab="section-<?php echo esc_attr( $slug ); ?>"
 						>
 							<div class="block">
-								<?php echo strpos( $url, '//' ) ? esc_url( $url ) : esc_attr( $url ); ?>
+								<?php
+									/** Tab contains 2 types: External Link (https://google.com) and Internal Link (#setting) */
+									echo strpos( $tab, '//' ) ? esc_url( $tab ) : esc_attr( $tab );
+								?>
 							</div>
 						</li>
 					<?php endforeach; ?>
@@ -46,11 +49,11 @@
 								<?php foreach ( $this->sections as $path => $section ) : ?>
 									<?php
 										extract( $this->sectionLoopLogic( $path, $section ) );
-										$type = ! strpos( $url, 'href' ) ? 'nav-nonurl' : '';
+										$type = ! strpos( $tab, 'href' ) ? 'nav-nonurl' : '';
 									?>
 										<div class="py-1">
 											<div data-tab="section-<?php echo esc_attr( $slug ); ?>" class="menu-item cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"  role="menuitem" >
-												<?php echo esc_url( $url ); ?>
+												<?php echo esc_url( $tab ); ?>
 											</div>
 										</div>
 								<?php endforeach; ?>

@@ -104,21 +104,21 @@ class View {
 		$data['active']  = isset( $section['active'] ) ? true : false;
 		$data['content'] = ( isset( $section['link'] ) && ! $data['active'] ) ? '' : $path; /** Handle url sections type */
 		if ( isset( $section['link'] ) && ! strpos( $section['link'], '//' ) ) {
-			$data['url'] = $this->WP->Page->add_query_arg( null, null ) . '&section=' . $section['link'];
-			$data['url'] = json_decode( FAB_PATH )['home_url'] . $data['url'];
-            $data['url'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
+			$data['tab'] = $this->WP->Page->add_query_arg( null, null ) . '&section=' . $section['link'];
+			$data['tab'] = json_decode( FAB_PATH )['home_url'] . $data['tab'];
+            $data['tab'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
                 'tab-'. $data['slug'],
                 $section['link'],
                 $section['name'],
             );
 		} elseif ( isset( $section['link'] ) && strpos( $section['link'], '//' ) ) {
-            $data['url'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
+            $data['tab'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
                 'tab-'. $data['slug'],
                 $section['link'],
                 $section['name'],
             );
 		} else {
-			$data['url'] = $section['name'];}
+			$data['tab'] = $section['name'];}
 		return $data;
 	}
 

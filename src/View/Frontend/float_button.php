@@ -18,9 +18,9 @@
 				   data-id="<?php echo esc_attr( $fab_item->getID() ); ?>"
 				   data-type="<?php echo esc_attr( $fab_item->getType() ); ?>"
 					<?php echo ( esc_attr( $fab_item->getHotkey() ) ) ? sprintf( ' data-hotkey="%s" ', esc_attr( $fab_item->getHotkey() ) ) : ''; ?>
-					<?php echo ( 'link' != esc_attr( $fab_item->getType() ) ) ? 'data-modal="fab-modal-' . esc_attr( $fab_item->getID() ) . '"' : ''; ?>
-					<?php echo ( 'link' == esc_attr( $fab_item->getType() ) && esc_attr( $fab_item->getLinkBehavior() ) ) ? sprintf( 'target="_fab_window_%s"', esc_attr( $fab_item->getID() ) ) : ''; ?>
-					<?php if ( 'link' == esc_attr( $fab_item->getType() ) ) : ?>
+					<?php echo ( 'link' !== esc_attr( $fab_item->getType() ) ) ? 'data-modal="fab-modal-' . esc_attr( $fab_item->getID() ) . '"' : ''; ?>
+					<?php echo ( 'link' === esc_attr( $fab_item->getType() ) && esc_attr( $fab_item->getLinkBehavior() ) ) ? sprintf( 'target="_fab_window_%s"', esc_attr( $fab_item->getID() ) ) : ''; ?>
+					<?php if ( 'link' === esc_attr( $fab_item->getType() ) ) : ?>
 						href="<?php echo esc_url( $fab_item->getLink() ); ?>"
 						class="fab-links cursor-pointer"
 					<?php else : ?>
@@ -50,14 +50,7 @@
 			class="hidden modal" data-title="<?php echo esc_attr( $fab_item->getTitle() ); ?>"
 			data-icon="<?php echo ( $fab_item->getIconClass() ) ? esc_attr( $fab_item->getIconClass() ) : 'fas fa-circle'; ?>">
 				<div class="w-full overflow-hidden">
-					<?php if ( 'modal' == $fab_item->getType() ) : ?>
-						<?php echo do_shortcode( get_post_field( 'post_content', $fab_item->getID() ) ); ?>
-					<?php elseif ( 'widget' == $fab_item->getType() ) : ?>
-						<?php dynamic_sidebar( 'fab-widget-' . $fab_item->getSlug() ); ?>
-					<?php elseif ( 'widget_content' == $fab_item->getType() ) : ?>
-						<?php echo do_shortcode( get_post_field( 'post_content', $fab_item->getID() ) ); ?>
-						<?php dynamic_sidebar( 'fab-widget-' . $fab_item->getSlug() ); ?>
-					<?php endif; ?>
+					<?php $fab_item->render();  ?>
 				</div>
 		</div>
 	</div>

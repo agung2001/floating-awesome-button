@@ -96,6 +96,7 @@ class Fab extends Model {
 				$items[] = get_post( $value );
 			}
 		}
+		$order = array_flip( $order );
 
 		/** Grab Data - Unordered */
 		$items = array_merge(
@@ -116,8 +117,9 @@ class Fab extends Model {
 		/** Filter by Location */
 		$tmp = array();
 		foreach ( $items as &$item ) {
-			$item    = new FABItem( $item->ID ); // Grab FAB Item.
-			$order[] = $item->getID();
+			$item = new FABItem( $item->ID ); // Grab FAB Item.
+			if ( ! isset( $order[ $item->getID() ] ) ) {
+				$order[ $item->getID() ] = count( $order ); }
 			if ( isset( $args['validateLocation'] ) &&
 				! empty( $item->getLocations() ) &&
 				! $item->isToBeDisplayed()
@@ -141,7 +143,7 @@ class Fab extends Model {
 		}
 
 		return array(
-			'order' => $order,
+			'order' => array_flip( $order ),
 			'items' => $items,
 		);
 	}

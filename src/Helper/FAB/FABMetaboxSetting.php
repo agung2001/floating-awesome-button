@@ -26,23 +26,18 @@ class FABMetaboxSetting extends Metabox {
 	/** $_POST input */
 	public static $input = array(
 		'fab_setting_type'          => array(
-			'type'    => 'text',
 			'default' => '',
 		),
 		'fab_setting_link'          => array(
-			'type'    => 'text',
 			'default' => '',
 		),
 		'fab_setting_icon_class'    => array(
-			'type'    => 'text',
 			'default' => 'fas fa-circle',
 		),
 		'fab_setting_link_behavior' => array(
-			'type'    => 'text',
 			'default' => '',
 		),
 		'fab_setting_hotkey'        => array(
-			'type'    => 'text',
 			'default' => '',
 		),
 	);
@@ -65,9 +60,16 @@ class FABMetaboxSetting extends Metabox {
 	/** Sanitize */
 	public function sanitize() {
 		$input = self::$input;
-		foreach ( $input as &$value ) {
-			$value = $value['type']; }
-		$this->params = $this->WP->sanitizeParams( $_POST, $input );
+
+		/** Sanitized input */
+		$params = array();
+		foreach ( $_POST as $key => $value ) {
+			if ( isset( $input[ $key ] ) && $params[ $key ] ) {
+				$params[ $key ] = sanitize_text_field( $value );
+			}
+		}
+
+		$this->params = $params;
 	}
 
 	/** SetDefaultInput */

@@ -103,9 +103,9 @@
 	jQuery(document).ready(function(){
 		/** Trigger on Submit */
 		jQuery('#setting-form').submit(function() {
-            let enableOption = jQuery('#field_option_animation_enable').val();
+			let enableOption = jQuery('#field_option_animation_enable').val();
 			let animation = {
-				enable: ( enableOption===1 || enableOption==='true') ? 1 : 0,
+				enable: ( enableOption==='1' || enableOption===1 || enableOption==='true') ? 1 : 0,
 				elements: {}
 			}
 			/** Grab Backend Assets Fields */

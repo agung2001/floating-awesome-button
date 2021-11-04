@@ -142,17 +142,51 @@ class FABItem {
 	 * @param int    $page_id seting that saved on meta fab_locations
 	 * @return bool
 	 */
-	public function match_operator_and_value( $operator, $sourceValue, $comparedValue ) {
+	public function match_operator_and_value( $operator, $source_value, $compared_value ) {
 		/** Match operator equal to */
-		if ( '==' == $operator && $sourceValue == $comparedValue ) {
+		if ( '==' === $operator && $source_value === $compared_value ) {
 			return true;
 		}
 		/** Match operator not equal to */
-		elseif ( '!=' == $operator && $sourceValue != $comparedValue ) {
+		elseif ( '!=' === $operator && $source_value !== $compared_value ) {
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Render FAB by type
+	 *
+	 * @return void
+	 */
+	public function render() {
+		if ( 'modal' === $this->getType() ) {
+			$this->render_content();
+		} elseif ( 'widget' === $this->getType() ) {
+			$this->render_widget();
+		} elseif ( 'widget_content' === $this->getType() ) {
+			$this->render_content();
+			$this->render_widget();
+		}
+	}
+
+	/**
+	 * Render FAB Content
+	 *
+	 * @return void
+	 */
+	public function render_content() {
+		$content = get_post_field( 'post_content', $this->getID() ); // Get post content.
+		$content = wp_kses_post( $content ); // Esc content.
+		echo do_shortcode( $content ); // Output the content.
+	}
+
+	/**
+	 * Render FAB Widget
+	 */
+	public function render_widget() {
+		dynamic_sidebar( 'fab-widget-' . $this->getSlug() );
 	}
 
 	/**

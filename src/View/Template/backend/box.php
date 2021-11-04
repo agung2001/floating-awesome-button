@@ -10,8 +10,11 @@
 		<ul class="nav-tab-wrapper <?php echo ( isset( $disableTab ) ) ? '' : 'nav-tab-general'; ?>">
 			<?php foreach ( $this->sections as $path => $section ) : ?>
 				<?php extract( $this->sectionLoopLogic( $path, $section ) ); ?>
-				<li class="nav-tab <?php echo ( $active ) ? 'nav-tab-active' : ''; ?>" data-tab="section-<?php echo esc_attr($slug); ?>">
-                    <?php echo strpos( $url, '//' ) ? esc_url( $url ) : esc_attr( $url ); ?>
+				<li class="nav-tab <?php echo ( $active ) ? 'nav-tab-active' : ''; ?>" data-tab="section-<?php echo esc_attr( $slug ); ?>">
+					<?php
+						/** Tab contains 2 types: External Link (https://google.com) and Internal Link (#setting) */
+						echo strpos( $tab, '//' ) ? esc_url( $tab ) : esc_attr( $tab );
+					?>
 				</li>
 			<?php endforeach; ?>
 		</ul>

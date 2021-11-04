@@ -30,17 +30,14 @@ class FABMetaboxLocation extends Metabox {
 	/** $_POST input */
 	public static $input = array(
 		'fab_location_type'     => array(
-			'type'         => 'text',
 			'default'      => '',
 			'sub_meta_key' => 'type',
 		),
 		'fab_location_operator' => array(
-			'type'         => 'text',
 			'default'      => '',
 			'sub_meta_key' => 'operator',
 		),
 		'fab_location_value'    => array(
-			'type'         => 'text',
 			'default'      => '',
 			'sub_meta_key' => 'value',
 		),
@@ -62,10 +59,14 @@ class FABMetaboxLocation extends Metabox {
 		/** $_POST Data for metabox location */
 		$input = self::$input;
 
-		/** Sanitize */
-		$params = $this->WP->sanitize( 'array', $_POST );
+		/** Validate Data Type */
+		if ( ! is_array( $_POST ) ) {
+			return;
+		} else {
+			$params = $_POST;
+		}
 
-		/** Check Data Type is Correct Before Continue */
+		/** Validate sub Data Type */
 		foreach ( $input as $key => $meta ) {
 			if ( ! isset( $params[ $key ] ) || ! is_array( $params[ $key ] ) ) {
 				return;
@@ -75,10 +76,9 @@ class FABMetaboxLocation extends Metabox {
 		/** Sanitize Params */
 		$rules_count = 0;
 		foreach ( $input as $key => &$meta ) {
-			$type = $meta['type'];
 			$meta = array();
 			foreach ( $params[ $key ] as $value ) {
-				$meta[] = $this->WP->sanitize( $type, $value );
+				$meta[] = sanitize_text_field( $value );
 				$rules_count++;
 			}
 		}

@@ -12,6 +12,7 @@ namespace Fab\Controller;
 */
 
 use Fab\View;
+use Fab\Helper\FABMetaboxLocation;
 use Fab\Wordpress\Hook\Action;
 use Fab\Wordpress\Page\SubmenuPage;
 

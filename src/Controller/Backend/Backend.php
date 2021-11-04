@@ -112,7 +112,7 @@ class Backend extends Base {
 		/** Sanitize Params */
 		$params = array();
 		foreach ( $_POST as $key => $value ) {
-			$params[ $key ] = $this->WP->sanitize( 'text', $value );
+			$params[ $key ] = esc_attr( $value );
 		}
 
 		/** Transform & save field key */
