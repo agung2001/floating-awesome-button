@@ -1,10 +1,8 @@
-<input type="hidden" name="field_option_assets" id="fab_assets">
-
 <?php if ( (array) $options->fab_assets->backend ) : ?>
 <h2 class="text-lg py-4 my-4 border-b border-gray-200">Backend</h2>
 <div class="flex flex-wrap overflow-hidden">
 	<?php foreach ( $options->fab_assets->backend as $asset_id => $asset ) : ?>
-		<?php $asset_key = preg_replace( '/[^\p{L}\p{N}\s]/u', '_', $asset_id ); ?>
+		<?php $asset_key = preg_replace( '/[^\p{L}\p{N}\s]/u', '-', $asset_id ); ?>
 		<div class="w-full overflow-hidden lg:w-1/4 px-2 py-2">
 			<div class="bg-white shadow-md border border-gray-200 rounded-lg grid grid-cols-3 px-6 pt-4">
 				<div class="font-medium text-gray-600 col-span-2">
@@ -33,6 +31,7 @@
 						</label>
 						<input type="hidden"
 						   class="field_option_backend_assets"
+                           name="fab_assets[backend][<?php echo esc_attr( $asset_key ); ?>][status]"
 						   id="field_option_backend_assets_<?php echo esc_attr( $asset_key ); ?>"
 						   value="<?php echo ( esc_attr( $asset->status ) ) ? true : false; ?>"
 						   data-option="<?php echo esc_attr( $asset_id ); ?>"
@@ -49,7 +48,7 @@
 <h2 class="text-lg py-4 my-4 border-b border-gray-200">Frontend</h2>
 <div class="flex flex-wrap overflow-hidden">
 	<?php foreach ( $options->fab_assets->frontend as $asset_id => $asset ) : ?>
-		<?php $asset_key = preg_replace( '/[^\p{L}\p{N}\s]/u', '_', $asset_id ); ?>
+		<?php $asset_key = preg_replace( '/[^\p{L}\p{N}\s]/u', '-', $asset_id ); ?>
 		<div class="w-full overflow-hidden lg:w-1/4 px-2 py-2">
 			<div class="bg-white shadow-md border border-gray-200 rounded-lg grid grid-cols-3 px-6 pt-4">
 				<div class="font-medium text-gray-600 col-span-2">
@@ -78,6 +77,7 @@
 						</label>
 						<input type="hidden"
 							   class="field_option_frontend_assets"
+                               name="fab_assets[frontend][<?php echo esc_attr( $asset_key ); ?>][status]"
 							   id="field_option_frontend_assets_<?php echo esc_attr( $asset_key ); ?>"
 							   value="<?php echo ( esc_attr( $asset->status ) ) ? true : false; ?>"
 							   data-option="<?php echo esc_attr( $asset_id ); ?>"
@@ -89,26 +89,3 @@
 	<?php endforeach; ?>
 </div>
 <?php endif; ?>
-
-<script>
-	jQuery(document).ready(function($){
-		let assets = {
-			backend: JSON.parse(`<?php echo wp_json_encode( $options->fab_assets->backend ); ?>`),
-			frontend: JSON.parse(`<?php echo wp_json_encode( $options->fab_assets->frontend ); ?>`),
-		}
-		/** Trigger on Submit */
-		jQuery('#setting-form').submit(function() {
-			/** Grab Backend Assets Fields */
-			jQuery('.field_option_backend_assets').each(function(){
-				assets.backend[jQuery(this).data('option')].status =
-					( jQuery(this).val()==1 || jQuery(this).val()==='true') ? 1 : 0;
-			});
-			/** Grab Frontend Assets Fields */
-			jQuery('.field_option_frontend_assets').each(function(){
-				assets.frontend[jQuery(this).data('option')].status =
-					( jQuery(this).val()==1 || jQuery(this).val()==='true') ? 1 : 0;
-			});
-			jQuery('#fab_assets').val( JSON.stringify(assets) );
-		});
-	});
-</script>

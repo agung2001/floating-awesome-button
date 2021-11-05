@@ -1,5 +1,3 @@
-<input type="hidden" name="field_option_animation" id="fab_animation">
-
 <div class="grid grid-cols-5 gap-4 py-6">
 	<div class="font-medium text-gray-600 pt-2">
 		Enable Option
@@ -19,7 +17,7 @@
 					<div class="fab absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition"></div>
 				</div>
 			</label>
-			<input type="hidden" id="field_option_animation_enable" value="<?php echo esc_attr( $options->fab_animation->enable ); ?>">
+			<input type="hidden" name="fab_animation[enable]" id="field_option_animation_enable" value="<?php echo esc_attr( $options->fab_animation->enable ); ?>">
 		</div>
 		<div class="text-gray-400">
 			<em class="field-info">
@@ -38,6 +36,7 @@
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_logo"
+                    name="fab_animation[elements][logo]"
 					class="field_option_animation_element select2"
 					data-option="logo"
 					data-selected="<?php echo esc_attr( $options->fab_animation->elements->logo ); ?>">
@@ -51,6 +50,7 @@
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_tab"
+                    name="fab_animation[elements][tab]"
 					class="field_option_animation_element select2"
 					data-option="tab"
 					data-selected="<?php echo esc_attr( $options->fab_animation->elements->tab ); ?>">>
@@ -64,6 +64,7 @@
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_content"
+                    name="fab_animation[elements][content]"
 					class="field_option_animation_element select2"
 					data-option="content"
 					data-selected="<?php echo esc_attr( $options->fab_animation->elements->content ); ?>">>
@@ -78,6 +79,7 @@
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_active"
+                    name="fab_animation[elements][fab_active]"
 					class="field_option_animation_element select2"
 					data-option="fab_active"
 					data-selected="<?php echo esc_attr( $options->fab_animation->elements->fab_active ); ?>">>
@@ -91,6 +93,7 @@
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_inactive"
+                    name="fab_animation[elements][fab_inactive]"
 					class="field_option_animation_element select2"
 					data-option="fab_inactive"
 					data-selected="<?php echo esc_attr( $options->fab_animation->elements->fab_inactive ); ?>">>
@@ -98,21 +101,3 @@
 		</div>
 	</div>
 <?php endif; ?>
-
-<script>
-	jQuery(document).ready(function(){
-		/** Trigger on Submit */
-		jQuery('#setting-form').submit(function() {
-			let enableOption = jQuery('#field_option_animation_enable').val();
-			let animation = {
-				enable: ( enableOption==='1' || enableOption===1 || enableOption==='true') ? 1 : 0,
-				elements: {}
-			}
-			/** Grab Backend Assets Fields */
-			jQuery('.field_option_animation_element').each(function(){
-				animation.elements[jQuery(this).data('option')] = jQuery(this).val();
-			});
-			jQuery('#fab_animation').val( JSON.stringify(animation) );
-		});
-	});
-</script>

@@ -2,7 +2,7 @@
 
 namespace Fab\Feature;
 
-! defined( 'WPINC ' ) or die;
+! defined( 'WPINC ' ) || die;
 
 /**
  * Initiate plugins
@@ -22,12 +22,30 @@ class Order extends Feature {
 	 */
 	public function __construct( $plugin ) {
 		parent::__construct( $plugin );
+		$this->WP          = $plugin->getWP();
 		$this->key         = 'core_order';
 		$this->name        = 'Order';
 		$this->description = 'Sort FAB Orders';
-		$this->options     = array(
-			'fab_order',
-		);
+	}
+
+	/**
+	 * Sanitize input
+	 */
+	public function sanitize() {
+		/** Grab Data */
+		$this->params = $_POST;
+		$this->params = $this->params['fab_order'];
+
+		/** Sanitize Text Field */
+		$this->params = (object) array( 'fab_order' => sanitize_text_field( $this->params ) );
+	}
+
+	/**
+	 * Transform data before save
+	 */
+	public function transform() {
+		$this->options = json_decode( $this->params->fab_order );
+		return $this->options;
 	}
 
 }

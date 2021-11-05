@@ -254,9 +254,9 @@ class Plugin {
 					$namespaceKey = str_replace( '\\', '_', strtolower( $namespace ) );
 					$hookName     = preg_replace( '/[^A-Za-z0-9_]/', '', strtolower( $hook->getHook() ) );
 					$callbackName = preg_replace( '/[^A-Za-z0-9_]/', '', strtolower( $hook->getCallback() ) );
-					$key          = sprintf( 'fab_hooks_%s_%s_%s_%s', $namespaceKey, strtolower( $name ), $hookName, $callbackName );
-					$status       = ( isset( $this->config->options->$key ) ) ? $this->config->options->$key : $hook->isStatus(); // Option Exists
-					$status       = ( $status ) ? true : false; // Grab option status
+					$key          = sprintf( 'hooks_%s_%s_%s_%s', $namespaceKey, strtolower( $name ), $hookName, $callbackName );
+					$status       = ( isset( $this->config->options->fab_hooks->$key ) ) ? $this->config->options->fab_hooks->$key : $hook->isStatus(); // Option Exists
+					$status       = ( $status=='true' ) ? true : false; // Grab option status
 					if ( $status == false && ! $hook->isMandatory() ) {
 						continue; // Check plugin isMandatory
 					}

@@ -5,6 +5,7 @@
 		<main class="my-2 px-2 w-full overflow-hidden col-span-5 lg:col-span-4">
 			<?php foreach ( $features as $key => $feature ) : ?>
 				<?php
+				/** Grab Data */
 				$config_path = sprintf(
 					'%s/src/View/Backend/Settings/%s.php',
 					json_decode( FAB_PATH )->plugin_path,
@@ -32,7 +33,6 @@
 					</div>
 				<?php endif; ?>
 			<?php endforeach; ?>
-
 		</main>
 
 		<aside class="sticky top-0 my-2 px-2 w-full overflow-hidden invisible lg:visible">

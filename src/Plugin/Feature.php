@@ -2,7 +2,7 @@
 
 namespace Fab\Feature;
 
-!defined( 'WPINC ' ) or die;
+! defined( 'WPINC ' ) or die;
 
 /**
  * Initiate plugins
@@ -13,103 +13,123 @@ namespace Fab\Feature;
 
 class Feature {
 
-    /**
-     * Feature key
-     * @var     string
-     */
-    protected $key;
+	/**
+	 * Feature key
+	 *
+	 * @var     string
+	 */
+	protected $key;
 
-    /**
-     * Feature name
-     * @var     string
-     */
-    protected $name;
+	/**
+	 * Feature name
+	 *
+	 * @var     string
+	 */
+	protected $name;
 
-    /**
-     * Feature description
-     * @var     string
-     */
-    protected $description;
+	/**
+	 * Feature description
+	 *
+	 * @var     string
+	 */
+	protected $description;
 
-    /**
-     * Feature options
-     * @var     array
-     */
-    protected $options;
+	/**
+	 * Feature options
+	 *
+	 * @var     object
+	 */
+	protected $options;
 
-    /**
-     * Feature construect
-     * @return void
-     * @var    object   $plugin     Feature configuration
-     * @pattern prototype
-     */
-    public function __construct(\Fab\Plugin $plugin){
-        $this->options = [];
-        $this->hide_on_production = false;
-        $this->Plugin = $plugin;
-    }
+	/**
+	 * Feature params
+	 *
+	 * @var     object
+	 */
+	protected $params;
 
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this->key;
-    }
+	/**
+	 * Feature construect
+	 *
+	 * @return void
+	 * @var    object   $plugin     Feature configuration
+	 * @pattern prototype
+	 */
+	public function __construct( \Fab\Plugin $plugin ) {
+		$this->options            = (object) array();
+		$this->params             = (object) array();
+		$this->hide_on_production = false;
+		$this->Plugin             = $plugin;
+	}
 
-    /**
-     * @param string $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    }
+	/**
+	 * @return string
+	 */
+	public function getKey() {
+		return $this->key;
+	}
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
+	/**
+	 * @param string $key
+	 */
+	public function setKey( $key ) {
+		$this->key = $key;
+	}
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
 
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
+	/**
+	 * @param string $name
+	 */
+	public function setName( $name ) {
+		$this->name = $name;
+	}
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
+	/**
+	 * @return string
+	 */
+	public function getDescription() {
+		return $this->description;
+	}
 
-    /**
-     * @return array
-     */
-    public function getOptions(): array
-    {
-        return $this->options;
-    }
+	/**
+	 * @param string $description
+	 */
+	public function setDescription( $description ) {
+		$this->description = $description;
+	}
 
-    /**
-     * @param array $options
-     */
-    public function setOptions(array $options): void
-    {
-        $this->options = $options;
-    }
+	/**
+	 * @return object
+	 */
+	public function getOptions() {
+		return $this->options;
+	}
+
+	/**
+	 * @param object $options
+	 */
+	public function setOptions( $options ): void {
+		$this->options = $options;
+	}
+
+	/**
+	 * @return object
+	 */
+	public function getParams() {
+		return $this->params;
+	}
+
+	/**
+	 * @param object $params
+	 */
+	public function setParams( $params ): void {
+		$this->params = $params;
+	}
+
 }

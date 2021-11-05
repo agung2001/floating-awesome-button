@@ -4,7 +4,7 @@ Tags: floating button, custom button, action button, call, email, marketing, soc
 Requires at least: 5.0
 Tested up to: 5.8.1
 Requires PHP: 7.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPL-3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
@@ -58,7 +58,7 @@ If you enjoy it please feel free to spread the words ;)
 
 == Changelog ==
 
-= 1.2.1 =
+= 1.2.2 =
 * Premium function key fix in old borwser
 
 = 1.2.0 =

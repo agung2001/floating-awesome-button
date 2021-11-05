@@ -22,6 +22,7 @@ return array(
     'Fab\\Feature\\Backend' => $baseDir . '/src/Feature/Backend.php',
     'Fab\\Feature\\Feature' => $baseDir . '/src/Plugin/Feature.php',
     'Fab\\Feature\\Frontend' => $baseDir . '/src/Feature/Frontend.php',
+    'Fab\\Feature\\Hooks' => $baseDir . '/src/Feature/Hooks.php',
     'Fab\\Feature\\Order' => $baseDir . '/src/Feature/Order.php',
     'Fab\\Helper' => $baseDir . '/src/Plugin/Helper.php',
     'Fab\\Helper\\Directory' => $baseDir . '/src/Plugin/Helper/Directory.php',

@@ -14,6 +14,20 @@ namespace Fab\Wordpress\Helper;
 trait Validate {
 
 	/**
+	 * Recurse function to sanitize text field
+	 */
+	public function sanitizeTextField( $params ) {
+		foreach ( $params as $key => &$value ) {
+			if ( is_array( $value ) ) {
+				$value = $this->sanitizeTextField( $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+		}
+		return $params;
+	}
+
+	/**
 	 * Validate $_POST Params
 	 *
 	 * @var     array   $_POST      $_POST parameters

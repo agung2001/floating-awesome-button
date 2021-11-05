@@ -14,16 +14,6 @@ namespace Fab\Wordpress\Helper;
 trait Template {
 
     /**
-     * Wordpress esc function
-     * @return mixed    Return sanitized values
-     */
-    public function esc($type, $value, $args = []){
-        if($type=='html') return esc_html($value);
-        elseif($type=='url') return esc_url($value);
-        elseif($type=='attr') return esc_attr($value);
-    }
-
-    /**
      * Template functions
      * - have_posts - Whether current WordPress query has results to loop over.
      * - the_post - Iterate the post index in the loop.

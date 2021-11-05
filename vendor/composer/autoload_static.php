@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6b7e8ac184fd79fa4fd66473b39af165
+class ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -23,6 +23,7 @@ class ComposerStaticInit6b7e8ac184fd79fa4fd66473b39af165
         'Fab\\Feature\\Backend' => __DIR__ . '/../..' . '/src/Feature/Backend.php',
         'Fab\\Feature\\Feature' => __DIR__ . '/../..' . '/src/Plugin/Feature.php',
         'Fab\\Feature\\Frontend' => __DIR__ . '/../..' . '/src/Feature/Frontend.php',
+        'Fab\\Feature\\Hooks' => __DIR__ . '/../..' . '/src/Feature/Hooks.php',
         'Fab\\Feature\\Order' => __DIR__ . '/../..' . '/src/Feature/Order.php',
         'Fab\\Helper' => __DIR__ . '/../..' . '/src/Plugin/Helper.php',
         'Fab\\Helper\\Directory' => __DIR__ . '/../..' . '/src/Plugin/Helper/Directory.php',
@@ -69,7 +70,7 @@ class ComposerStaticInit6b7e8ac184fd79fa4fd66473b39af165
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit6b7e8ac184fd79fa4fd66473b39af165::$classMap;
+            $loader->classMap = ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa::$classMap;
 
         }, null, ClassLoader::class);
     }

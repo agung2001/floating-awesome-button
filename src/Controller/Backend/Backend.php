@@ -40,7 +40,7 @@ class Backend extends Base {
 		/** @backend - Add setting link for plugin in plugins page */
 		$action = clone $action;
 		$action->setHook( sprintf( 'plugin_action_links_%s/%s.php', $this->Plugin->getSlug(), $this->Plugin->getSlug() ) );
-		$action->setCallback( 'backend_plugin_setting_link' );
+		$action->setCallback( 'plugin_setting_link' );
 		$action->setMandatory( false );
 		$action->setAcceptedArgs( 1 );
 		$action->setDescription( 'Add setting link for plugin in plugins page' );
@@ -85,6 +85,9 @@ class Backend extends Base {
 			$this->WP->enqueue_assets( $config->fab_assets->backend );
 		}
 
+		/** Load Core Vendors */
+        wp_enqueue_script('jquery-ui-sortable');
+
 		/** Load Plugin Assets */
 		$this->WP->wp_enqueue_style( 'fab', 'build/css/backend.min.css' );
 		$this->WP->wp_enqueue_script( 'fab', 'build/js/backend/plugin.min.js', array(), '', true );
@@ -97,7 +100,7 @@ class Backend extends Base {
 	 * @return  void
 	 * @var     array   $links     Plugin links
 	 */
-	public function backend_plugin_setting_link( $links ) {
+	public function plugin_setting_link( $links ) {
 		$slug = sprintf( '%s-setting', $this->Plugin->getSlug() );
 		return array_merge( $links, array( '<a href="options-general.php?page=' . $slug . '">Settings</a>' ) );
 	}
