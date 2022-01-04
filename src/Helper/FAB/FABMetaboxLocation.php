@@ -1,6 +1,6 @@
 <?php
 
-namespace Fab\Helper;
+namespace Fab\Metabox;
 
 ! defined( 'WPINC ' ) or die;
 
@@ -27,6 +27,18 @@ class FABMetaboxLocation extends Metabox {
 		),
 	);
 
+    /** FAB Metabox Operator Logic */
+    public static $logic = array(
+        array(
+            'id'   => 'OR',
+            'text' => 'OR',
+        ),
+        array(
+            'id'   => 'AND',
+            'text' => 'AND',
+        ),
+    );
+
 	/** $_POST input */
 	public static $input = array(
 		'fab_location_type'     => array(
@@ -41,6 +53,10 @@ class FABMetaboxLocation extends Metabox {
 			'default'      => '',
 			'sub_meta_key' => 'value',
 		),
+        'fab_location_logic'    => array(
+            'default'      => '',
+            'sub_meta_key' => 'logic',
+        ),
 	);
 
 	/** FAB Metabox Post Metas */
@@ -88,7 +104,7 @@ class FABMetaboxLocation extends Metabox {
 	}
 
 	/** transformData */
-	public function transformData() {
+	public function setDefaultInput() {
 		/** Transform Locations */
 		$locations = array();
 		foreach ( self::$input as $key => $meta ) {

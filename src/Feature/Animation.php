@@ -45,7 +45,10 @@ class Animation extends Feature {
 	 */
 	public function transform() {
 		$this->options->enable   = ( in_array( $this->params->enable, array( 'true', '1', 1 ) ) ) ? 1 : 0;
-		$this->options->elements = (object) $this->params->elements;
+        $this->params->elements = isset($this->params->elements) ? $this->params->elements : [];
+		$this->options->elements = (object) array_merge(
+            (array) $this->options->elements,
+            (array) $this->params->elements);
 		return $this->options;
 	}
 

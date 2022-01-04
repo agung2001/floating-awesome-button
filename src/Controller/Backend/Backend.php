@@ -12,7 +12,9 @@ namespace Fab\Controller;
  * @subpackage Fab/Controller
  */
 
+use Fab\Feature\Design;
 use Fab\Wordpress\Hook\Action;
+use Fab\Wordpress\Hook\Filter;
 
 class Backend extends Base {
 
@@ -26,9 +28,19 @@ class Backend extends Base {
 	public function __construct( $plugin ) {
 		parent::__construct( $plugin );
 
-		/** @backend - Eneque scripts */
+		/** @backend - Handle plugin upgrade */
 		$action = new Action();
 		$action->setComponent( $this );
+		$action->setHook( 'upgrader_process_complete' );
+		$action->setCallback( 'upgrade_plugin' );
+		$action->setAcceptedArgs( 2 );
+		$action->setMandatory( false );
+		$action->setDescription( 'Handle plugin upgrade' );
+		$action->setFeature( $plugin->getFeatures()['core_backend'] );
+		$this->hooks[] = $action;
+
+		/** @backend - Eneque scripts */
+		$action = clone $action;
 		$action->setHook( 'admin_enqueue_scripts' );
 		$action->setCallback( 'backend_enequeue' );
 		$action->setAcceptedArgs( 0 );
@@ -46,6 +58,38 @@ class Backend extends Base {
 		$action->setDescription( 'Add setting link for plugin in plugins page' );
 		$action->setFeature( $plugin->getFeatures()['core_backend'] );
 		$this->hooks[] = $action;
+
+		/** @backend */
+		$filter = new Filter();
+        $filter->setComponent( $this );
+		$filter->setHook( 'plugin_row_meta' );
+		$filter->setCallback( 'plugin_row_meta_references' );
+		$filter->setAcceptedArgs(4);
+		$filter->setMandatory( true );
+		$filter->setDescription( 'Add references links Documentations & Tutorials' );
+		$filter->setFeature( $plugin->getFeatures()['core_backend'] );
+		$this->hooks[] = $filter;
+	}
+
+	/**
+	 * Handle plugin upgrade
+	 *
+	 * @return void
+	 */
+	public function upgrade_plugin( $upgrader_object, $options ) {
+		$current_plugin_path_name = plugin_basename( $this->Plugin->getConfig()->path );
+		if ( $options['action'] === 'update' && $options['type'] === 'plugin' ) {
+			foreach ( $options['plugins'] as $each_plugin ) {
+				if ( $each_plugin == $current_plugin_path_name ) {
+					/** Update options */
+					$this->WP->update_option(
+						'fab_config',
+						(object) (
+						(array) $this->Plugin->getConfig()->options + (array) $this->Plugin->getConfig()->default )
+					);
+				}
+			}
+		}
 	}
 
 	/**
@@ -54,12 +98,19 @@ class Backend extends Base {
 	 * @return  void
 	 */
 	public function backend_enequeue() {
+		/** Load Data */
 		define( 'FAB_SCREEN', json_encode( $this->WP->getScreen() ) );
-		$config  = $this->WP->get_option( 'fab_config' );
+		$default = $this->Plugin->getConfig()->default;
+		$config  = $this->Plugin->getConfig()->options;
 		$screen  = $this->WP->getScreen();
 		$slug    = sprintf( '%s-setting', $this->Plugin->getSlug() );
 		$screens = array( sprintf( 'settings_page_%s', $slug ) );
 		$types   = array( 'fab' );
+
+        /** Load Core Vendors */
+        wp_enqueue_script( 'jquery' );
+        wp_enqueue_script( 'jquery-ui-sortable' );
+        wp_enqueue_style( 'wp-color-picker' );
 
 		/** Load Inline Script */
 		$this->WP->wp_enqueue_script( 'fab-local', 'local/fab.js', array(), '', true );
@@ -67,13 +118,16 @@ class Backend extends Base {
 			'fab-local',
 			'FAB_PLUGIN',
 			array(
-				'name'    => FAB_NAME,
-				'version' => FAB_VERSION,
-				'screen'  => FAB_SCREEN,
-				'path'    => FAB_PATH,
-				'options' => array(
-					'animation' => $config->fab_animation,
-				),
+				'name'           => FAB_NAME,
+				'version'        => FAB_VERSION,
+				'screen'         => FAB_SCREEN,
+				'path'           => FAB_PATH,
+				'premium'        => $this->Helper->isPremiumPlan(),
+				'options'        => (object) ( (array) $config + (array) $default ),
+				'defaultOptions' => array(
+                    'layout' => Design::$layout,
+                    'template' => Design::$template
+                ),
 			)
 		);
 
@@ -85,12 +139,9 @@ class Backend extends Base {
 			$this->WP->enqueue_assets( $config->fab_assets->backend );
 		}
 
-		/** Load Core Vendors */
-        wp_enqueue_script('jquery-ui-sortable');
-
 		/** Load Plugin Assets */
 		$this->WP->wp_enqueue_style( 'fab', 'build/css/backend.min.css' );
-		$this->WP->wp_enqueue_script( 'fab', 'build/js/backend/plugin.min.js', array(), '', true );
+		$this->WP->wp_enqueue_script( 'fab', 'build/js/backend/plugin.min.js', array( 'wp-color-picker' ), '', true );
 	}
 
 	/**
@@ -106,37 +157,18 @@ class Backend extends Base {
 	}
 
 	/**
-	 * Save given options to database
-	 *
-	 * @backend - @pageSetting
-	 * @return  bool
+	 * Plugin row meta references
 	 */
-	public function saveSettings() {
-		/** Sanitize Params */
-		$params = array();
-		foreach ( $_POST as $key => $value ) {
-			$params[ $key ] = esc_attr( $value );
-		}
+	public function plugin_row_meta_references( $plugin_meta, $plugin_file, $plugin_data, $status ) {
+		if ( strpos( $plugin_file, sprintf( '%s.php', $this->Plugin->getSlug() ) ) !== false ) {
+			$new_links = array(
+				'doc'    => '<a href="https://www.youtube.com/watch?v=MMuhc9pcYew&list=PLnwuifVLRkaXBV9IBTPZeLtduzCdt5cFh" target="_blank">Documentation</a>',
+				'tutorial' => '<a href="https://www.youtube.com/watch?v=CkSspyM9yjQ&list=PLnwuifVLRkaXH9I-QAAReVoEv9DClViPG" target="_blank">Tutorial</a>',
+			);
 
-		/** Transform & save field key */
-		$options = $this->Plugin->getConfig()->options;
-		foreach ( $params as $key => $value ) {
-			/** Transform & save json string */
-			if ( strpos( $key, '_array' ) ) {
-				$value = stripslashes( $value );
-			}
-			/** Transform & save default input */
-			unset( $options->$key );
-			$key           = str_replace( 'field_option', 'fab', $key );
-			$key           = str_replace( 'field_array', 'fab', $key );
-			$value         = ( $value == 'true' || $value == 'on' ) ? 'true' : $value;
-			$value         = ( $value == 'false' ) ? '' : $value;
-			$value         = ( $this->Helper->isJson( str_replace( '\"', '"', $value ) ) ) ?
-				json_decode( str_replace( '\"', '"', $value ) ) : $value;
-			$options->$key = $value;
+			$plugin_meta = array_merge( $plugin_meta, $new_links );
 		}
-		$this->WP->update_option( 'fab_config', $options );
-		return $options;
+		return $plugin_meta;
 	}
 
 }

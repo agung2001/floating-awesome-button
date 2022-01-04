@@ -18,10 +18,10 @@
 				</div>
 			</label>
 			<input type="hidden" name="fab_animation[enable]" id="field_option_animation_enable" value="<?php echo esc_attr( $options->fab_animation->enable ); ?>">
+            <span class="pl-2" style="padding-top:2px;">Enable/Disable</span>
 		</div>
 		<div class="text-gray-400">
 			<em class="field-info">
-				You can turn on/off the animation by switching the toggle button.
 				To see animation reference you can go to
 				<code><a href="https://daneden.github.io/animate.css/" target="_blank">Animate.css</a></code>.
 			</em>
@@ -73,9 +73,24 @@
 	</div>
 <?php endif; ?>
 <?php if ( $this->Helper->isPremiumPlan() ) : ?>
+    <h2 class="text-lg py-4 my-4 border-b border-gray-200">Floating Button</h2>
+    <div class="grid grid-cols-5 gap-4 py-4">
+        <div class="font-medium text-gray-600 pt-2">
+            <label for="field_option_animation_fab">Animation</label>
+        </div>
+        <div class="col-span-4">
+            <select id="field_option_animation_fab"
+                    name="fab_animation[elements][fab]"
+                    class="field_option_animation_element select2"
+                    data-selected="<?php echo isset( $options->fab_animation->elements->fab ) ? esc_attr( $options->fab_animation->elements->fab ) : 'ripple'; ?>">>
+            </select>
+        </div>
+    </div>
+
+    <h2 class="text-lg py-4 my-4 border-b border-gray-200">Button Lists</h2>
 	<div class="grid grid-cols-5 gap-4 py-4">
 		<div class="font-medium text-gray-600 pt-2">
-			<label for="field_option_animation_active">FAB Animation Active</label>
+			<label for="field_option_animation_active">Active</label>
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_active"
@@ -89,7 +104,7 @@
 
 	<div class="grid grid-cols-5 gap-4 py-4">
 		<div class="font-medium text-gray-600 pt-2">
-			<label for="field_option_animation_inactive">FAB Animation Inactive</label>
+			<label for="field_option_animation_inactive">Inactive</label>
 		</div>
 		<div class="col-span-4">
 			<select id="field_option_animation_inactive"

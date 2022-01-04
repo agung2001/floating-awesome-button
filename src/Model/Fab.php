@@ -10,8 +10,10 @@ namespace Fab\Model;
 
 ! defined( 'WPINC ' ) || die;
 
-use Fab\Helper\FABMetaboxLocation;
-use Fab\Helper\FABMetaboxSetting;
+use Fab\Metabox\FABMetaboxDesign;
+use Fab\Metabox\FABMetaboxLocation;
+use Fab\Metabox\FABMetaboxSetting;
+use Fab\Metabox\FABMetaboxTrigger;
 use Fab\Wordpress\Hook\Action;
 use Fab\Helper\FABItem;
 
@@ -32,15 +34,11 @@ class Fab extends Model {
 		/** Create a post type */
 		parent::__construct( $plugin );
 		$this->args['public']             = true;
-		$this->args['publicly_queryable'] = false;
+		$this->args['publicly_queryable'] = true; /** Needed to enable Elementor */
 		$this->args['menu_icon']          = json_decode( FAB_PATH )->plugin_url . '/assets/img/icon.png';
 		$this->args['has_archive']        = false;
 
-		/**
-		 * Save Metabox Setting to postmeta
-		 *
-		 * @backend
-		 */
+		/** @backend */
 		$action = new Action();
 		$action->setComponent( $this );
 		$action->setHook( 'save_post' );
@@ -49,6 +47,12 @@ class Fab extends Model {
 		$action->setDescription( 'Save FAB Metabox Data' );
 		$this->hooks[] = $action;
 
+		/** @backend */
+		$action = clone $action;
+		$action->setHook( 'template_redirect' );
+		$action->setCallback( 'redirect_public_access' );
+		$action->setDescription( 'Redirect FAB Post Type Public Access' );
+		$this->hooks[] = $action;
 	}
 
 	/**
@@ -65,16 +69,38 @@ class Fab extends Model {
 		}
 
 		/** Save Metabox Setting */
-		$FABMetaboxSetting = new FABMetaboxSetting();
-		$FABMetaboxSetting->sanitize();
-		$FABMetaboxSetting->setDefaultInput();
-		$FABMetaboxSetting->save();
+		if ( $this->checkInput( FABMetaboxSetting::$input ) ) {
+			$metabox = new FABMetaboxSetting();
+			$metabox->sanitize();
+			$metabox->setDefaultInput();
+			$metabox->save();
+		}
+
+		/** Save Metabox Design */
+		if ( $this->checkInput( FABMetaboxDesign::$input ) ) {
+			$metabox = new FABMetaboxDesign();
+			$metabox->sanitize();
+			$metabox->setDefaultInput();
+			$metabox->save();
+		}
 
 		/** Save Metabox Location */
-		$FABMetaboxLocation = new FABMetaboxLocation();
-		$FABMetaboxLocation->sanitize();
-		$FABMetaboxLocation->transformData();
-		$FABMetaboxLocation->save();
+		if ( $this->checkInput( FABMetaboxLocation::$input ) ) {
+			$metabox = new FABMetaboxLocation();
+			$metabox->sanitize();
+			$metabox->setDefaultInput();
+			$metabox->save();
+		} else {
+			$this->WP->delete_post_meta( $post->ID, FABMetaboxLocation::$post_metas['locations']['meta_key'] );
+		}
+
+		/** Save Metabox Trigger */
+		if ( $this->checkInput( FABMetaboxTrigger::$input ) ) {
+			$metabox = new FABMetaboxTrigger();
+			$metabox->sanitize();
+			$metabox->setDefaultInput();
+			$metabox->save();
+		}
 	}
 
 	/**
@@ -89,7 +115,7 @@ class Fab extends Model {
 		$items = array();
 
 		/** Grab Data - Ordered Data */
-		$fab_order = $this->WP->get_option( 'fab_config' )->fab_order;
+		$fab_order = $this->Plugin->getConfig()->options->fab_order;
 		if ( $fab_order ) {
 			$order = $fab_order;
 			foreach ( $fab_order as $value ) {
@@ -117,7 +143,16 @@ class Fab extends Model {
 		/** Filter by Location */
 		$tmp = array();
 		foreach ( $items as &$item ) {
+			if ( ! isset( $item->ID ) ) {
+				continue;
+			}
 			$item = new FABItem( $item->ID ); // Grab FAB Item.
+			if ( $item->getStatus() !== 'publish' ) {
+				continue;
+			}
+			if ( isset( $args['builder'] ) && ! in_array( $item->getBuilder(), $args['builder'] ) ) {
+				continue;
+			}
 			if ( ! isset( $order[ $item->getID() ] ) ) {
 				$order[ $item->getID() ] = count( $order ); }
 			if ( isset( $args['validateLocation'] ) &&
@@ -146,6 +181,34 @@ class Fab extends Model {
 			'order' => array_flip( $order ),
 			'items' => $items,
 		);
+	}
+
+	/** Redirect public access */
+	public function redirect_public_access() {
+		global $post;
+		if ( isset( $post->post_type ) && $post->post_type === 'fab' ) {
+			$user  = ( is_user_logged_in() ) ? wp_get_current_user() : array();
+			$roles = ( isset( $user->roles ) ) ? (array) $user->roles : array();
+			if ( ! in_array( 'administrator', $roles ) ) {
+				$url = sprintf( '%spost.php?post=%s&action=edit', admin_url(), $post->ID );
+				wp_redirect( $url );
+			}
+		}
+	}
+
+	/** Check Input Exists */
+	private function checkInput( $input, $input_exists = false ) {
+		/** Get Parameters */
+		$params = $_POST;
+
+		/** Check Input Exists */
+		foreach ( $input as $key => $value ) {
+			if ( isset( $params[ $key ] ) ) {
+				$input_exists = true;
+				break; }
+		}
+
+		return $input_exists;
 	}
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fab\Helper;
+namespace Fab\Metabox;
 
 ! defined( 'WPINC ' ) or die;
 
@@ -17,36 +17,70 @@ class FABMetaboxSetting extends Metabox {
 
 	/** FAB Metabox Settings */
 	public static $types = array(
-		'modal'          => 'Modal',
-		'link'           => 'Link',
-		'widget'         => 'Widget',
-		'widget_content' => 'Content + Widget',
+		array(
+			'text'     => 'Auth',
+			'children' => array(
+				array(
+					'id'   => 'auth_login',
+					'text' => 'Login',
+				),
+				array(
+					'id'   => 'auth_logout',
+					'text' => 'Logout',
+				),
+			),
+		),
+		array(
+			'id'   => 'link',
+			'text' => 'Link',
+		),
+		array(
+			'id'   => 'modal',
+			'text' => 'Modal',
+		),
+		array(
+			'id'   => 'search',
+			'text' => 'Search',
+		),
+		array(
+			'text'     => 'Widget',
+			'children' => array(
+				array(
+					'id'   => 'modal_widget',
+					'text' => 'Modal + Widget',
+				),
+				array(
+					'id'   => 'widget',
+					'text' => 'Widget',
+				),
+			),
+		),
+	);
+
+	/** FAB Metabox Settings */
+	public static $triggers = array(
+		array(
+			'id'   => 'exit_intent',
+			'text' => 'Exit Intent',
+		),
+		array(
+			'id'   => 'time_delay',
+			'text' => 'Time Delay',
+		),
 	);
 
 	/** $_POST input */
 	public static $input = array(
-		'fab_setting_type'          => array(
-			'default' => '',
-		),
-		'fab_setting_link'          => array(
-			'default' => '',
-		),
-		'fab_setting_icon_class'    => array(
-			'default' => 'fas fa-circle',
-		),
-		'fab_setting_link_behavior' => array(
-			'default' => '',
-		),
-		'fab_setting_hotkey'        => array(
-			'default' => '',
-		),
+		'fab_setting_type'          => array( 'default' => '' ),
+		'fab_setting_link'          => array( 'default' => '' ),
+		'fab_setting_link_behavior' => array( 'default' => '' ),
+		'fab_setting_hotkey'        => array( 'default' => '' ),
 	);
 
 	/** FAB Metabox Post Metas */
 	public static $post_metas = array(
 		'type'          => array( 'meta_key' => 'fab_setting_type' ),
 		'link'          => array( 'meta_key' => 'fab_setting_link' ),
-		'icon_class'    => array( 'meta_key' => 'fab_setting_icon_class' ),
 		'link_behavior' => array( 'meta_key' => 'fab_setting_link_behavior' ),
 		'hotkey'        => array( 'meta_key' => 'fab_setting_hotkey' ),
 	);
@@ -64,7 +98,7 @@ class FABMetaboxSetting extends Metabox {
 		/** Sanitized input */
 		$params = array();
 		foreach ( $_POST as $key => $value ) {
-			if ( isset( $input[ $key ] ) && $params[ $key ] ) {
+			if ( isset( $input[ $key ] ) && $value ) {
 				$params[ $key ] = sanitize_text_field( $value );
 			}
 		}
@@ -77,14 +111,15 @@ class FABMetaboxSetting extends Metabox {
 		/** Default Input Function */
 		$input = self::$input;
 		foreach ( $input as $key => $value ) {
-			if ( ! $this->params[ $key ] && $value['default'] ) {
+			if ( ! isset( $this->params[ $key ] ) ) {
 				$this->params[ $key ] = $value['default'];
 			}
 		}
 
-		/** Special Case */
-		$this->params['fab_setting_link_behavior'] = ( $this->params['fab_setting_type'] == 'link' ) ?
-			$this->params['fab_setting_link_behavior'] : '';
+		/** Transform Data */
+		$this->params['fab_setting_link'] = ( $this->params['fab_setting_link'] ) ? $this->params['fab_setting_link'] : '#';
+		$this->params['fab_setting_link_behavior'] = ( $this->params['fab_setting_link_behavior'] === 'true' ) ? 1 : 0;
+		$this->params['fab_setting_link_behavior'] = ( $this->params['fab_setting_type'] === 'link' ) ? $this->params['fab_setting_link_behavior'] : 0;
 	}
 
 	/** Save data to database */

@@ -130,6 +130,9 @@ class Plugin {
 		/** Init Config */
 		$this->config->path = explode( '/', dirname( __DIR__, 2 ) );
 		$this->config->path = implode( '/', $this->config->path ) . '/' . end( $this->config->path ) . '.php';
+        $this->config->options = $this->WP->get_option( 'fab_config' );
+        $this->config->options = ( $this->config->options ) ? $this->config->options : new \stdClass();
+        $this->path            = $this->WP->getPath( $this->config->path );
 	}
 
 	/**
@@ -151,9 +154,6 @@ class Plugin {
 	 * @return  void
 	 */
 	public function run() {
-		$this->config->options = $this->WP->get_option( 'fab_config' );
-		$this->config->options = ( $this->config->options ) ? $this->config->options : new \stdClass();
-		$this->path            = $this->WP->getPath( $this->config->path );
 		$this->Helper->defineConst( $this );
 		$this->loadModels();
 		$this->loadFeatures();
@@ -163,7 +163,7 @@ class Plugin {
 	}
 
 	/**
-	 * Activate the plugin
+	 * Lifecycle Activate the plugin
 	 *
 	 * @return  void
 	 */
@@ -287,10 +287,11 @@ class Plugin {
      * @return void
      */
     public function setDefaultOption(){
-        $config = $this->WP->get_option( 'fab_config' );
-        if(!$config){
-            $config = (array) $this->config->default + (array) $this->WP->get_option( 'fab_config' );
+        $config = (array) $this->config->options;
+        if(empty($config) || !$config){
+            $config = (array) $this->config->options + (array) $this->config->default;
             $this->WP->update_option( 'fab_config', (object) $config );
+            $this->config->options = (object) $config;
         }
     }
 

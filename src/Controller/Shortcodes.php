@@ -13,7 +13,7 @@ namespace Fab\Controller;
  */
 
 use Fab\Wordpress\Hook\Shortcode;
-use Fab\View;
+use Fab\Module\FABModuleSearch;
 
 class Shortcodes extends Base {
 
@@ -27,7 +27,7 @@ class Shortcodes extends Base {
 	public function __construct( $plugin ) {
 		parent::__construct( $plugin );
 
-		/** @frontend - Fab Ad Network */
+		/** @frontend */
 		$shortcode = new Shortcode();
 		$shortcode->setComponent( $this );
 		$shortcode->setHook( 'fab_search' );
@@ -39,25 +39,14 @@ class Shortcodes extends Base {
 		$this->hooks[] = $shortcode;
 	}
 
-	/**
-	 * Set View for [fab_search] shortcode
-	 *
-	 * @return      string              Html template string from view View/Frontend/search.php
-	 */
-	public function fab_search() {
-		ob_start();
-			$view = new View( $this->Plugin );
-			$view->setTemplate( 'frontend.blank' );
-			$view->setSections(
-				array(
-					'Frontend.search' => array(
-						'name'   => 'Shortcode',
-						'active' => true,
-					),
-				)
-			);
-			$view->setOptions( array( 'shortcode' => false ) );
-			$view->build();
-		return ob_get_clean();
-	}
+    /**
+     * Set View for [fab_search] shortcode
+     *
+     * @return      string              Html template string from view View/Frontend/search.php
+     */
+    public function fab_search() {
+        $module = new FABModuleSearch();
+        $module->render();
+    }
+
 }
