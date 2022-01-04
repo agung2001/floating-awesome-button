@@ -6,10 +6,12 @@
 			<?php foreach ( $features as $key => $feature ) : ?>
 				<?php
 				/** Grab Data */
+                $featureSlug = str_replace(' ', '', strtolower($feature->getName()) );
+                $featureSlug = preg_replace('/[^\p{L}\p{N}\s]/u', '', $featureSlug);
 				$config_path = sprintf(
 					'%s/src/View/Backend/Settings/%s.php',
 					json_decode( FAB_PATH )->plugin_path,
-					$feature->getName()
+                    $featureSlug
 				);
 				if ( file_exists( $config_path ) ) :
 					?>
@@ -27,7 +29,7 @@
 								</h2>
 							</div>
 
-							<?php $this->loadContent( 'Backend/Settings/.' . esc_attr( $feature->getName() ) ); ?>
+							<?php $this->loadContent( 'Backend/Settings/.' . esc_attr( $featureSlug ) ); ?>
 
 						</div>
 					</div>
@@ -54,10 +56,13 @@
 					</li>
 					<?php foreach ( $features as $key => $feature ) : ?>
 						<?php
+                        /** Grab Data */
+                        $featureSlug = str_replace(' ', '', strtolower($feature->getName()) );
+                        $featureSlug = preg_replace('/[^\p{L}\p{N}\s]/u', '', $featureSlug);
 						$config_path = sprintf(
 							'%s/src/View/Backend/Settings/%s.php',
 							json_decode( FAB_PATH )->plugin_path,
-							$feature->getName()
+                            $featureSlug
 						);
 						if ( ! file_exists( $config_path ) ) {
 							continue;

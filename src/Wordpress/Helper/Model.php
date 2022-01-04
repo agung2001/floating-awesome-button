@@ -53,6 +53,13 @@ trait Model {
     }
 
     /**
+     * Determines if a meta field with the given key exists for the given object ID.
+     */
+    public function metadata_exists(string $meta_type, int $object_id, string $meta_key){
+        return metadata_exists($meta_type, $object_id, $meta_key);
+    }
+
+    /**
      * Retrieves a post meta field for the given post ID.
      * @param      int    $ID       Post id
      * @param      int    $meta_key       meta_key

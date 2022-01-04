@@ -80,7 +80,10 @@ class BackendPage extends Base {
 				'background'   => 'bg-alizarin',
 				'features'     => $features['features'],
 				'featureHooks' => $features['featureHooks'],
-				'options'      => $this->WP->get_option('fab_config'),
+                'options' => (object) (
+                    (array) $this->WP->get_option( 'fab_config' ) +
+                    (array) $this->Plugin->getConfig()->default
+                ),
 			)
 		);
 		$view->setOptions( array( 'shortcode' => false ) );
@@ -101,6 +104,7 @@ class BackendPage extends Base {
 	 * Handle Page Submission
 	 */
 	public function page_setting_submission( $slug, $features ) {
+        $default = $this->Plugin->getConfig()->default;
 		$options = $this->Plugin->getConfig()->options;
 		if ( isset( $_GET['page'] ) && $_GET['page'] == $slug ) {
 			if ( $_POST && isset( $_POST['clear-config'] ) ) { /** Clear Config */
@@ -113,7 +117,8 @@ class BackendPage extends Base {
                 if ( isset( $params['fab_animation'] ) ) {
                     $feature = $features['features']['core_animation'];
                     $feature->sanitize();
-                    $feature->setOptions( $options->fab_animation );
+                    $featureOption = (isset($options->fab_animation)) ? $options->fab_animation : $default->fab_animation;
+                    $feature->setOptions( $featureOption );
                     $options->fab_animation = $feature->transform();
                 }
 
@@ -121,8 +126,18 @@ class BackendPage extends Base {
                 if ( isset( $params['fab_assets'] ) ) {
                     $feature = $features['features']['core_asset'];
                     $feature->sanitize();
-                    $feature->setOptions( $options->fab_assets );
+                    $featureOption = (isset($options->fab_assets)) ? $options->fab_assets : $default->fab_assets;
+                    $feature->setOptions( $featureOption );
                     $options->fab_assets = $feature->transform();
+                }
+
+                /** Sanitize & Transform Order */
+                if ( isset( $params['fab_design'] ) ) {
+                    $feature = $features['features']['core_design'];
+                    $featureOption = (isset($options->fab_design)) ? $options->fab_design : $default->fab_design;
+                    $feature->setOptions( $featureOption );
+                    $feature->sanitize();
+                    $options->fab_design = $feature->transform();
                 }
 
 				/** Sanitize & Transform Order */

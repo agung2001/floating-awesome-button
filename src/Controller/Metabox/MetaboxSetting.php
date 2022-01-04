@@ -13,7 +13,7 @@ namespace Fab\Controller;
 
 use Fab\View;
 use Fab\Helper\FABItem;
-use Fab\Helper\FABMetaboxSetting;
+use Fab\Metabox\FABMetaboxSetting;
 use Fab\Wordpress\Hook\Action;
 use Fab\Wordpress\MetaBox;
 
@@ -65,6 +65,14 @@ class MetaboxSetting extends Base {
 			return;
 		}
 
+        /** Add Inline Script */
+        $this->WP->wp_localize_script( 'fab-local', 'FAB_METABOX_SETTING', array(
+            'defaultOptions' => [
+                'types' => FABMetaboxSetting::$types,
+                'triggers' => FABMetaboxSetting::$triggers,
+            ],
+        ));
+
 		/** Enqueue */
 		$this->WP->wp_enqueue_script( 'fab-setting', 'build/js/backend/metabox-setting.min.js', array(), '', true );
 	}
@@ -99,7 +107,7 @@ class MetaboxSetting extends Base {
 		$view->setTemplate( 'backend.blank' );
 		$view->setSections(
 			array(
-				'Backend.Metabox.metabox_settings' => array(
+				'Backend.Metabox.setting' => array(
 					'name'   => '',
 					'active' => true,
 				),
@@ -107,8 +115,7 @@ class MetaboxSetting extends Base {
 		);
 		$view->setData(
 			array(
-				'fab'                       => new FABItem( $post->ID ),
-				'fab_metabox_setting_types' => FABMetaboxSetting::$types,
+				'fab' => new FABItem( $post->ID ),
 			)
 		);
 		$view->build();

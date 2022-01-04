@@ -109,13 +109,13 @@ class View {
             $data['tab'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
                 'tab-'. $data['slug'],
                 $section['link'],
-                $section['name'],
+                $section['name']
             );
 		} elseif ( isset( $section['link'] ) && strpos( $section['link'], '//' ) ) {
             $data['tab'] = sprintf('<a id="%s" href="%s" target="_blank">%s</a>',
                 'tab-'. $data['slug'],
                 $section['link'],
-                $section['name'],
+                $section['name']
             );
 		} else {
 			$data['tab'] = $section['name'];}

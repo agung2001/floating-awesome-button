@@ -47,13 +47,16 @@
 						<div class="opacity-0 invisible dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95 absolute z-50 right-0 mx-4">
 							<div class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none z-50" aria-labelledby="headlessui-menu-button-1" id="headlessui-menu-items-117" role="menu">
 								<?php foreach ( $this->sections as $path => $section ) : ?>
-									<?php
-										extract( $this->sectionLoopLogic( $path, $section ) );
-										$type = ! strpos( $tab, 'href' ) ? 'nav-nonurl' : '';
-									?>
+                                    <?php
+                                        extract( $this->sectionLoopLogic( $path, $section ) );
+                                        $type = ! strpos( $tab, 'href' ) ? 'nav-nonurl' : '';
+                                    ?>
 										<div class="py-1">
 											<div data-tab="section-<?php echo esc_attr( $slug ); ?>" class="menu-item cursor-pointer text-gray-700 flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"  role="menuitem" >
-												<?php echo esc_url( $tab ); ?>
+                                                <?php
+                                                    /** Tab contains 2 types: External Link (https://google.com) and Internal Link (#setting) */
+                                                    echo strpos( $tab, '//' ) ? esc_url( $tab ) : esc_attr( $tab );
+                                                ?>
 											</div>
 										</div>
 								<?php endforeach; ?>

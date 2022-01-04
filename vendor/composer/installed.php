@@ -7,7 +7,7 @@
         'aliases' => array(),
         'reference' => NULL,
         'name' => 'fab/framework',
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'fab/framework' => array(

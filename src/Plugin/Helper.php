@@ -16,6 +16,7 @@ class Helper {
     /** Load Trait */
     use Helper\Directory;
     use Helper\Text;
+    use Helper\Option;
     use Helper\Plan;
 
     /**

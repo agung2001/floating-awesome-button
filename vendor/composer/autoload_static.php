@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa
+class ComposerStaticInit51c735aa9bd9616b6c1272155f13e4c6
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -14,26 +14,39 @@ class ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa
         'Fab\\Controller\\Base' => __DIR__ . '/../..' . '/src/Controller/Base.php',
         'Fab\\Controller\\Controller' => __DIR__ . '/../..' . '/src/Plugin/Controller.php',
         'Fab\\Controller\\Customizer' => __DIR__ . '/../..' . '/src/Plugin/Customizer.php',
+        'Fab\\Controller\\Elementor' => __DIR__ . '/../..' . '/src/Controller/Elementor/Elementor.php',
         'Fab\\Controller\\Frontend' => __DIR__ . '/../..' . '/src/Controller/Frontend/Frontend.php',
+        'Fab\\Controller\\MetaboxDesign' => __DIR__ . '/../..' . '/src/Controller/Metabox/MetaboxDesign.php',
         'Fab\\Controller\\MetaboxLocation' => __DIR__ . '/../..' . '/src/Controller/Metabox/MetaboxLocation.php',
         'Fab\\Controller\\MetaboxSetting' => __DIR__ . '/../..' . '/src/Controller/Metabox/MetaboxSetting.php',
+        'Fab\\Controller\\MetaboxTrigger' => __DIR__ . '/../..' . '/src/Controller/Metabox/MetaboxTrigger.php',
         'Fab\\Controller\\Shortcodes' => __DIR__ . '/../..' . '/src/Controller/Shortcodes.php',
         'Fab\\Feature\\Animation' => __DIR__ . '/../..' . '/src/Feature/Animation.php',
         'Fab\\Feature\\Asset' => __DIR__ . '/../..' . '/src/Feature/Asset.php',
         'Fab\\Feature\\Backend' => __DIR__ . '/../..' . '/src/Feature/Backend.php',
+        'Fab\\Feature\\Design' => __DIR__ . '/../..' . '/src/Feature/Design.php',
+        'Fab\\Feature\\Elementor' => __DIR__ . '/../..' . '/src/Feature/Elementor.php',
         'Fab\\Feature\\Feature' => __DIR__ . '/../..' . '/src/Plugin/Feature.php',
         'Fab\\Feature\\Frontend' => __DIR__ . '/../..' . '/src/Feature/Frontend.php',
         'Fab\\Feature\\Hooks' => __DIR__ . '/../..' . '/src/Feature/Hooks.php',
+        'Fab\\Feature\\Modal' => __DIR__ . '/../..' . '/src/Feature/Modal.php',
         'Fab\\Feature\\Order' => __DIR__ . '/../..' . '/src/Feature/Order.php',
         'Fab\\Helper' => __DIR__ . '/../..' . '/src/Plugin/Helper.php',
         'Fab\\Helper\\Directory' => __DIR__ . '/../..' . '/src/Plugin/Helper/Directory.php',
         'Fab\\Helper\\FABItem' => __DIR__ . '/../..' . '/src/Helper/FAB/FABItem.php',
-        'Fab\\Helper\\FABMetaboxLocation' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxLocation.php',
-        'Fab\\Helper\\FABMetaboxSetting' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxSetting.php',
+        'Fab\\Helper\\FABModal' => __DIR__ . '/../..' . '/src/Helper/FAB/FABModal.php',
+        'Fab\\Helper\\Option' => __DIR__ . '/../..' . '/src/Plugin/Helper/Option.php',
         'Fab\\Helper\\Plan' => __DIR__ . '/../..' . '/src/Plugin/Helper/Plan.php',
         'Fab\\Helper\\Text' => __DIR__ . '/../..' . '/src/Plugin/Helper/Text.php',
+        'Fab\\Metabox\\FABMetaboxDesign' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxDesign.php',
+        'Fab\\Metabox\\FABMetaboxLocation' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxLocation.php',
+        'Fab\\Metabox\\FABMetaboxSetting' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxSetting.php',
+        'Fab\\Metabox\\FABMetaboxTrigger' => __DIR__ . '/../..' . '/src/Helper/FAB/FABMetaboxTrigger.php',
         'Fab\\Model\\Fab' => __DIR__ . '/../..' . '/src/Model/Fab.php',
         'Fab\\Model\\Model' => __DIR__ . '/../..' . '/src/Plugin/Model.php',
+        'Fab\\Module\\FABModuleAuthLogin' => __DIR__ . '/../..' . '/src/Helper/FAB/FABModuleAuthLogin.php',
+        'Fab\\Module\\FABModuleAuthLogout' => __DIR__ . '/../..' . '/src/Helper/FAB/FABModuleAuthLogout.php',
+        'Fab\\Module\\FABModuleSearch' => __DIR__ . '/../..' . '/src/Helper/FAB/FABModuleSearch.php',
         'Fab\\Plugin' => __DIR__ . '/../..' . '/src/Plugin/Plugin.php',
         'Fab\\View' => __DIR__ . '/../..' . '/src/Plugin/View.php',
         'Fab\\Wordpress\\Customizer\\Control' => __DIR__ . '/../..' . '/src/Wordpress/Customizer/Control.php',
@@ -70,7 +83,7 @@ class ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit68edb23ffd0addbe910e16c9c7c37aaa::$classMap;
+            $loader->classMap = ComposerStaticInit51c735aa9bd9616b6c1272155f13e4c6::$classMap;
 
         }, null, ClassLoader::class);
     }
