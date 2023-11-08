@@ -135,8 +135,8 @@ class Plugin {
 		$this->Form        = new Form();
 		$this->WP          = new \Fab\Wordpress\Helper();
 		/** Init Config */
-		$this->config->path = explode( '/', dirname( __DIR__, 2 ) );
-		$this->config->path = implode( '/', $this->config->path ) . '/' . end( $this->config->path ) . '.php';
+        $this->config->path = explode( DIRECTORY_SEPARATOR, dirname( __DIR__, 2 ) );
+        $this->config->path = implode( DIRECTORY_SEPARATOR, $this->config->path ) . DIRECTORY_SEPARATOR . end( $this->config->path ) . '.php';
         $this->config->options = $this->WP->get_option( 'fab_config' );
         $this->config->options = ( $this->config->options ) ? $this->config->options : new \stdClass();
         $this->path            = $this->WP->getPath( $this->config->path );
